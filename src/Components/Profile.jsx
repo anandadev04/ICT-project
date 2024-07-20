@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './Profile.css';
-import image from '/src/assets/pp.webp';
 
 const Profile = () => {
   const [user, setUser] = useState({
@@ -52,7 +51,7 @@ const Profile = () => {
         <div className="info-section">
           <h3>User Information</h3>
           {editing ? (
-            <div>
+            <div class='main'>
               <div className="input-group">
                 <label>Name: </label>
                 <input type="text" name="name" value={editInfo.name} onChange={change} />
