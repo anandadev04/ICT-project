@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Profile.css';
+import Navbar from './Navbar';
 
 const Profile = () => {
   const [user, setUser] = useState({
@@ -42,7 +43,9 @@ const Profile = () => {
   };
 
   return (
+    <div class='profile-body'>
     <div className="page-container">
+      <Navbar/>
         <div className="profile-section">
           <img src={user.profilePicture} alt="Profile" className="profile-picture" />
           <h2>{user.name}</h2>
@@ -81,6 +84,7 @@ const Profile = () => {
             </div>
           )}
         </div>
+    </div>
     </div>
   );
 };

@@ -9,9 +9,10 @@
     justify-content: space-between;
     align-items: center;
     z-index: 100;
+    box-sizing: border-box;
 }
 
-.logo{
+.nav-logo{
     font-size: 32px;
     color: #fff;
     font-weight: 700;

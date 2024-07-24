@@ -1,0 +1,112 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 600px;
+    background: transparent;
+    padding-bottom: 30px;
+}
+
+.login-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.text {
+    color: #114155;
+    font-size: 48px;
+    font-weight: 700;
+}
+
+.underline {
+    width: 61px;
+    height: 6px;
+    background: #114155;
+    border-radius: 9px;
+}
+
+.inputs {
+    margin-top: 55px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.input {
+    display: flex;
+    align-items: center;
+    margin: auto;
+    width: 480px;
+    height: 80px;
+    background: #eaeaea;
+    border-radius: 6px;
+}
+
+.input img {
+    margin: 0px 30px;
+}
+
+.input input {
+    height: 50px;
+    width: 400px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #797979;
+    font-size: 19px;  
+}
+
+.forgot-password {
+    padding-left: 62px;
+    margin-top: 27px;
+    color: #1E3050;
+    font-size: 18px;
+}
+
+.forgot-password span {
+    color: #114155;
+    cursor: pointer;
+}
+
+.submit-container {
+    display: flex;
+    gap: 30px;
+    margin: 60px auto;
+}
+
+/* Consistent Button Styling */
+.submit, .toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 220px;
+    height: 59px;
+    color: #fff; /* Text color */
+    background: #114155; /* Background color */
+    border-radius: 50px;
+    font-size: 19px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.submit.gray, .toggle.gray {
+    background: #eaeaea;
+    color: #676767;
+}
+
+.submit.gray:hover, .toggle.gray:hover {
+    background: #d0d0d0; /* Optional: Light gray for hover effect */
+}
+
+.submit:hover, .toggle:hover {
+    background: #0d3f54; /* Darker shade for hover effect */
+}
+
+input::placeholder {
+    color: #1E3050;
+    opacity: 1; /* Firefox */
+}
