@@ -5,6 +5,8 @@ import './LoginSignup.css';
 import user_icon from '../assets/person.png';
 import password_icon from '../assets/password.png';
 import email_icon from '../assets/email.png';
+import contact_icon from '../assets/phone-solid (1).png'
+import house_icon from '../assets/house-solid.png'
 
 const LoginSignup = () => {
   const [action, setAction] = useState("Sign up");
@@ -39,6 +41,18 @@ const LoginSignup = () => {
           <img src={email_icon} className="icon" alt="" />
           <input type="email" placeholder='Email Id' />
         </div>
+        {action === "Sign up" && (
+          <div className="input">
+            <img src={contact_icon} className="icon" alt="" />
+            <input type="text" placeholder='Contact Number' />
+          </div>
+        )}
+        {action === "Sign up" && (
+          <div className="input">
+            <img src={house_icon} className="icon" alt="" />
+            <input type="text" placeholder='Address' />
+          </div>
+        )}
         <div className="input">
           <img src={password_icon} className="icon" alt="" />
           <input type="password" placeholder='Password' />
