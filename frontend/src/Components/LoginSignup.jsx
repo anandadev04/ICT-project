@@ -43,6 +43,7 @@ const LoginSignup = () => {
       axios.post('http://localhost:4000/newuser', form)
         .then((res) => {
           alert('User signed up successfully');
+          setAction('Login');
           console.log(res);
         })
         .catch((error) => {
@@ -61,7 +62,7 @@ const LoginSignup = () => {
         {action === 'Sign up' && (
           <div className="input">
             <img src={user_icon} className="icon" alt="" />
-            <input type="text" name="name" placeholder="Name" onChange={valueFetch} value={form.name} />
+            <input type="text" name="userName" placeholder="Name" onChange={valueFetch} value={form.name} />
           </div>
         )}
         <div className="input">
@@ -71,7 +72,7 @@ const LoginSignup = () => {
         {action === 'Sign up' && (
           <div className="input">
             <img src={contact_icon} className="icon" alt="" />
-            <input type="text" name="contactNumber" placeholder="Contact Number" onChange={valueFetch} value={form.contactNumber} />
+            <input type="text" name="phoneNumber" placeholder="Contact Number" onChange={valueFetch} value={form.contactNumber} />
           </div>
         )}
         {action === 'Sign up' && (
