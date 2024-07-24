@@ -35,6 +35,25 @@ app.post('/login', async (req, res) => {
     }
   });
   
+  app.get('/profile', async (req, res) => {
+    try {
+      const { email } = req.query;
+      if (!email) {
+        return res.status(400).send('Email parameter is required');
+      }
+      const user = await userModel.findOne({ email }); 
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
+      console.log(user);
+      res.status(200).json(user); 
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+  
+
 
 app.listen(PORT,()=>{
     console.log("Server is running on PORT 4000")

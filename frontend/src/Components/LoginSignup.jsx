@@ -25,7 +25,6 @@ const LoginSignup = () => {
 
   const handleAction = () => {
     if (action === 'Login') {
-      // Handle Sign In
       axios.post('http://localhost:4000/login', {
         email: form.email,
         password: form.password
@@ -38,8 +37,8 @@ const LoginSignup = () => {
         console.error('Error signing in:', error);
         alert('Failed to sign in: ' + error.response.data);
       });
-    } else {
-
+    } 
+    else {
       axios.post('http://localhost:4000/newuser', form)
         .then((res) => {
           alert('User signed up successfully');

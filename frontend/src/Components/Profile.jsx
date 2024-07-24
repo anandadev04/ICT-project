@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import './Profile.css';
 import Navbar from './Navbar';
 
 const Profile = () => {
-  const [user, setUser] = useState({
-    profilePicture: './src/assets/pp.webp',
-    name: 'Anandadev A',
-    email: 'bdrlstrange123@gmail.com',
-    registeredEvent: 5,
-    phone: '9495496414',
-    address: 'Sreedeepam Thoongampara Kattakada PO Thiruvananthapuram',
-  });
+  const [user, setUser] = useState([]);
+
+  useEffect(()=>{
+    axios.get()
+  })
 
   const [editing, setEditing] = useState(false);
   const [editInfo, setInfo] = useState({
