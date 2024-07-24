@@ -1,26 +1,53 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './LoginSignup.css';
-
 import user_icon from '../assets/person.png';
 import password_icon from '../assets/password.png';
 import email_icon from '../assets/email.png';
-import contact_icon from '../assets/phone-solid (1).png'
-import house_icon from '../assets/house-solid.png'
+import contact_icon from '../assets/phone-solid (1).png';
+import house_icon from '../assets/house-solid.png';
 
 const LoginSignup = () => {
-  const [action, setAction] = useState("Sign up");
+  const [form, setForm] = useState({
+    userName: '',
+    email: '',
+    phoneNumber: '',
+    address: '',
+    password: ''
+  });
+  const [action, setAction] = useState('Login');
   const navigate = useNavigate();
 
+  const valueFetch = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
   const handleAction = () => {
-    if (action === "Login") {
+    if (action === 'Login') {
       // Handle Sign In
-      console.log("User signed in");
-      navigate('/home'); // Redirect to the home page
+      axios.post('http://localhost:4000/login', {
+        email: form.email,
+        password: form.password
+      })
+      .then((res) => {
+        console.log('User signed in successfully');
+        navigate('/home'); 
+      })
+      .catch((error) => {
+        console.error('Error signing in:', error);
+        alert('Failed to sign in: ' + error.response.data);
+      });
     } else {
-      // Handle Sign Up
-      console.log("User signed up");
-      // Add sign-up logic here
+
+      axios.post('http://localhost:4000/newuser', form)
+        .then((res) => {
+          alert('User signed up successfully');
+          console.log(res);
+        })
+        .catch((error) => {
+          console.error('There was an error signing up!', error);
+        });
     }
   };
 
@@ -31,46 +58,46 @@ const LoginSignup = () => {
         <div className="underline"></div>
       </div>
       <div className="inputs">
-        {action === "Sign up" && (
+        {action === 'Sign up' && (
           <div className="input">
             <img src={user_icon} className="icon" alt="" />
-            <input type="text" placeholder='Name' />
+            <input type="text" name="name" placeholder="Name" onChange={valueFetch} value={form.name} />
           </div>
         )}
         <div className="input">
           <img src={email_icon} className="icon" alt="" />
-          <input type="email" placeholder='Email Id' />
+          <input type="email" name="email" placeholder="Email Id" onChange={valueFetch} value={form.email} />
         </div>
-        {action === "Sign up" && (
+        {action === 'Sign up' && (
           <div className="input">
             <img src={contact_icon} className="icon" alt="" />
-            <input type="text" placeholder='Contact Number' />
+            <input type="text" name="contactNumber" placeholder="Contact Number" onChange={valueFetch} value={form.contactNumber} />
           </div>
         )}
-        {action === "Sign up" && (
+        {action === 'Sign up' && (
           <div className="input">
             <img src={house_icon} className="icon" alt="" />
-            <input type="text" placeholder='Address' />
+            <input type="text" name="address" placeholder="Address" onChange={valueFetch} value={form.address} />
           </div>
         )}
         <div className="input">
           <img src={password_icon} className="icon" alt="" />
-          <input type="password" placeholder='Password' />
+          <input type="password" name="password" placeholder="Password" onChange={valueFetch} value={form.password} />
         </div>
       </div>
-      {action === "Login" && (
+      {action === 'Login' && (
         <div className="forgot-password">Lost Password?<span>Click Here</span></div>
       )}
       <div className="submit-container">
         <div className="submit" onClick={handleAction}>
-          {action === "Login" ? "Sign In" : "Sign Up"}
+          {action === 'Login' ? 'Sign In' : 'Sign Up'}
         </div>
         {/* Toggle Buttons */}
-        {action === "Sign up" && (
-          <div className="toggle" onClick={() => setAction("Login")}>Login</div>
+        {action === 'Sign up' && (
+          <div className="toggle" onClick={() => setAction('Login')}>Login</div>
         )}
-        {action === "Login" && (
-          <div className="toggle" onClick={() => setAction("Sign up")}>Sign Up</div>
+        {action === 'Login' && (
+          <div className="toggle" onClick={() => setAction('Sign up')}>Sign Up</div>
         )}
       </div>
     </div>
