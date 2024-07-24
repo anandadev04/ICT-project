@@ -107,5 +107,3 @@ const Home = () => {
 }
 
 export default Home;
-
-print(hello)
