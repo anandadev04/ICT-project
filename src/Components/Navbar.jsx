@@ -1,7 +1,6 @@
 import React from 'react'
 import './Navbar.css'
 import { Link } from 'react-router-dom';
-
 const Navbar = () => {
   return (
     <header className='header'>
@@ -10,7 +9,7 @@ const Navbar = () => {
       <nav className="navbar">
       <Link to="/home">Home</Link>
       <Link to="/profile">Profile</Link>
-        <a href="">Events</a>
+      <Link to="/event">Events</Link>
       <Link to="/">Log Out</Link>
       </nav>
     </header>
