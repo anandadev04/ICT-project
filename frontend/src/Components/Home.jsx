@@ -107,4 +107,3 @@ const Home = () => {
 }
 
 export default Home;
- print(hi)
