@@ -20,38 +20,37 @@ app.post('/newuser',async(req,res)=>{
 
 app.post('/login', async (req, res) => {
     try {
-      const { email, password } = req.body;
-      const user = await userModel.findOne({ email });
-      if (!user) {
-        return res.status(404).send('User not found');
-      }
-      if (user.password !== password) {
-        return res.status(401).send('Invalid credentials');
-      }
-      res.status(200).send('Login successful');
+        const { email, password } = req.body;
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        if (user.password !== password) {
+            return res.status(401).send('Invalid credentials');
+        }
+        res.status(200).json({
+            message: 'Login successful',
+            isAdmin: user.userName.toLowerCase() === 'admin'
+        });
     } catch (error) {
-      console.error('Error logging in:', error);
-      res.status(500).send('Internal Server Error');
+        console.error('Error logging in:', error);
+        res.status(500).send('Internal Server Error');
     }
-  });
+});
   
-  app.get('/profile', async (req, res) => {
+app.get('/user/:email', async (req, res) => {
     try {
-      const { email } = req.query;
-      if (!email) {
-        return res.status(400).send('Email parameter is required');
-      }
-      const user = await userModel.findOne({ email }); 
-      if (!user) {
-        return res.status(404).send('User not found');
-      }
-      console.log(user);
-      res.status(200).json(user); 
+        const user = await userModel.findOne({ email: req.params.email });
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        res.status(200).json(user);
     } catch (error) {
-      console.error('Error fetching user profile:', error);
-      res.status(500).send('Internal Server Error');
+        console.error('Error fetching user:', error);
+        res.status(500).send('Internal Server Error');
     }
-  });
+});
+
   
 
 

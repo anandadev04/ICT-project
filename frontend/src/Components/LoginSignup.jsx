@@ -31,7 +31,12 @@ const LoginSignup = () => {
       })
       .then((res) => {
         console.log('User signed in successfully');
-        navigate('/home'); 
+        localStorage.setItem('userEmail', form.email); // Store email in localStorage
+        if (res.data.isAdmin) {
+          navigate('/admin-dashboard'); // Redirect to admin dashboard
+        } else {
+          navigate('/home'); // Redirect to home page
+        }
       })
       .catch((error) => {
         console.error('Error signing in:', error);
@@ -50,6 +55,7 @@ const LoginSignup = () => {
         });
     }
   };
+  
 
   return (
     <div className="container">

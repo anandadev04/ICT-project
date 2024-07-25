@@ -1,57 +1,77 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Profile.css';
 import Navbar from './Navbar';
 
 const Profile = () => {
-  const [user, setUser] = useState([]);
-
-  useEffect(()=>{
-    axios.get()
-  })
-
+  const [user, setUser] = useState({});
   const [editing, setEditing] = useState(false);
   const [editInfo, setInfo] = useState({
-    name: user.name,
-    email: user.email,
-    phone: user.phone,
-    address: user.address,
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
   });
+
+  // Assuming you have the user's email stored in localStorage after login
+  const userEmail = localStorage.getItem('userEmail');
+
+  useEffect(() => {
+    if (userEmail) {
+      axios.get(`http://localhost:4000/user/${userEmail}`)
+        .then((response) => {
+          setUser(response.data);
+          setInfo({
+            name: response.data.userName,
+            email: response.data.email,
+            phone: response.data.phoneNumber,
+            address: response.data.address,
+          });
+        })
+        .catch((error) => {
+          console.error('Error fetching user data:', error);
+        });
+    }
+  }, [userEmail]);
 
   const editClick = () => {
     setEditing(true);
   };
 
   const saveClick = () => {
-    setUser({
-      ...user,
-      name: editInfo.name,
-      email: editInfo.email,
-      phone: editInfo.phone,
-      address: editInfo.address,
-    });
-    setEditing(false);
+    // Update the user data in the database
+    axios.put(`http://localhost:4000/user/${userEmail}`, editInfo)
+      .then((response) => {
+        setUser({
+          ...user,
+          ...editInfo,
+        });
+        setEditing(false);
+      })
+      .catch((error) => {
+        console.error('Error updating user data:', error);
+      });
   };
 
   const change = (e) => {
     setInfo({
       ...editInfo,
-      [e.target.name]:e.target.value,
+      [e.target.name]: e.target.value,
     });
   };
 
   return (
-    <div class='profile-body'>
-    <div className="page-container">
-      <Navbar/>
+      <div className="page-container">
+        <Navbar />
         <div className="profile-section">
           <img src={user.profilePicture} alt="Profile" className="profile-picture" />
-          <h2>{user.name}</h2>
+          <h2>{user.userName}</h2>
           <p>{user.email}</p>
         </div>
         <div className="info-section">
           <h3>User Information</h3>
           {editing ? (
-            <div class='main'>
+            <div className="main">
               <div className="input-group">
                 <label>Name: </label>
                 <input type="text" name="name" value={editInfo.name} onChange={change} />
@@ -72,17 +92,16 @@ const Profile = () => {
             </div>
           ) : (
             <div>
-              <p>Name: {user.name}</p>
+              <p>Name: {user.userName}</p>
               <p>Email: {user.email}</p>
-              <p>Phone: {user.phone}</p>
+              <p>Phone: {user.phoneNumber}</p>
               <p>Address: {user.address}</p>
               <p>Events Registered: {user.registeredEvent}</p>
               <button onClick={editClick} className="profile-button edit-button">Edit</button>
             </div>
           )}
         </div>
-    </div>
-    </div>
+      </div>
   );
 };
 
