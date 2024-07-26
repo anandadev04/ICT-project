@@ -106,5 +106,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
-print(hello)
