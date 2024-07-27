@@ -1,8 +1,8 @@
-* {
+.profile-page * {
   box-sizing: border-box;
 }
 
-body {
+.profile-page body {
   font-family: 'Arial', sans-serif;
   color: #000000;
   height: 100vh;
