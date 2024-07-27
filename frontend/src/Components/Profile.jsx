@@ -13,7 +13,6 @@ const Profile = () => {
     address: '',
   });
 
-  // Assuming you have the user's email stored in localStorage after login
   const userEmail = localStorage.getItem('userEmail');
 
   useEffect(() => {
@@ -39,7 +38,6 @@ const Profile = () => {
   };
 
   const saveClick = () => {
-    // Update the user data in the database
     axios.put(`http://localhost:4000/user/${userEmail}`, editInfo)
       .then((response) => {
         setUser({
@@ -61,8 +59,9 @@ const Profile = () => {
   };
 
   return (
+    <div className="profile-page">
+      <Navbar />
       <div className="page-container">
-        <Navbar />
         <div className="profile-section">
           <img src={user.profilePicture} alt="Profile" className="profile-picture" />
           <h2>{user.userName}</h2>
@@ -102,6 +101,7 @@ const Profile = () => {
           )}
         </div>
       </div>
+    </div>
   );
 };
 
