@@ -25,36 +25,45 @@ const LoginSignup = () => {
 
   const handleAction = () => {
     if (action === 'Login') {
-      axios.post('http://localhost:4000/login', {
-        email: form.email,
-        password: form.password
-      })
-      .then((res) => {
-        console.log('User signed in successfully');
-        localStorage.setItem('userEmail', form.email); // Store email in localStorage
-        if (res.data.isAdmin) {
-          navigate('/admin-dashboard'); // Redirect to admin dashboard
-        } else {
-          navigate('/home'); // Redirect to home page
-        }
-      })
-      .catch((error) => {
-        console.error('Error signing in:', error);
-        alert('Failed to sign in: ' + error.response.data);
-      });
-    } 
-    else {
-      axios.post('http://localhost:4000/newuser', form)
+        axios.post('http://localhost:4000/login', {
+            email: form.email,
+            password: form.password
+        })
         .then((res) => {
-          alert('User signed up successfully');
-          setAction('Login');
-          console.log(res);
+            console.log('User signed in successfully');
+            localStorage.setItem('userEmail', form.email);
+            if (res.data.isAdmin) {
+                navigate('/admin-dashboard');
+            } else {
+                navigate('/home');
+            }
         })
         .catch((error) => {
-          console.error('There was an error signing up!', error);
+            console.error('Error signing in:', error);
+            alert('Failed to sign in: ' + error.response.data);
         });
+    } else {
+        const userData = {
+            userName: form.userName,
+            email: form.email,
+            phoneNumber: form.phoneNumber,
+            address: form.address,
+            password: form.password,
+            profilePicture: ''
+        };
+
+        axios.post('http://localhost:4000/newuser', userData)
+            .then((res) => {
+                alert('User signed up successfully');
+                setAction('Login');
+                console.log(res);
+            })
+            .catch((error) => {
+                console.error('There was an error signing up!', error);
+            });
     }
-  };
+};
+
   
 
   return (

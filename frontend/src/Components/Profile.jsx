@@ -11,6 +11,7 @@ const Profile = () => {
     email: '',
     phone: '',
     address: '',
+    profilePicture: '', // Add a field for the profile picture
   });
 
   const userEmail = localStorage.getItem('userEmail');
@@ -25,6 +26,7 @@ const Profile = () => {
             email: response.data.email,
             phone: response.data.phoneNumber,
             address: response.data.address,
+            profilePicture: response.data.profilePicture || '', // Set initial profile picture
           });
         })
         .catch((error) => {
@@ -38,18 +40,28 @@ const Profile = () => {
   };
 
   const saveClick = () => {
-    axios.put(`http://localhost:4000/user/${userEmail}`, editInfo)
-      .then((response) => {
-        setUser({
-          ...user,
-          ...editInfo,
+    const newData = {
+        userName: editInfo.name, // Correctly mapping to userName
+        email: editInfo.email,
+        phoneNumber: editInfo.phone, // Correctly mapping to phoneNumber
+        address: editInfo.address,
+        profilePicture: editInfo.profilePicture,
+    };
+
+    console.log('Updating user with data:', newData); // Log the data being sent
+    axios.put(`http://localhost:4000/user/${userEmail}`, newData)
+        .then((response) => {
+            setUser({
+                ...user,
+                ...newData,
+            });
+            setEditing(false);
+        })
+        .catch((error) => {
+            console.error('Error updating user data:', error);
         });
-        setEditing(false);
-      })
-      .catch((error) => {
-        console.error('Error updating user data:', error);
-      });
-  };
+};
+
 
   const change = (e) => {
     setInfo({
@@ -58,12 +70,32 @@ const Profile = () => {
     });
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setInfo({
+        ...editInfo,
+        profilePicture: reader.result.split(',')[1], // Store only the Base64 string
+      });
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="profile-page">
       <Navbar />
       <div className="page-container">
         <div className="profile-section">
-          <img src={user.profilePicture} alt="Profile" className="profile-picture" />
+          <img
+            src={user.profilePicture ? `data:image/png;base64,${user.profilePicture}` : 'default-profile.png'} // Use a default image if not set
+            alt="Profile"
+            className="profile-picture"
+          />
           <h2>{user.userName}</h2>
           <p>{user.email}</p>
         </div>
@@ -86,6 +118,10 @@ const Profile = () => {
               <div className="input-group">
                 <label>Address: </label>
                 <input type="text" name="address" value={editInfo.address} onChange={change} />
+              </div>
+              <div className="input-group">
+                <label>Profile Picture: </label>
+                <input type="file" accept="image/*" onChange={handleFileChange} />
               </div>
               <button onClick={saveClick} className="profile-button save-button">Save</button>
             </div>
