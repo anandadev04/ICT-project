@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Profile.css';
 import Navbar from './Navbar';
-import image from '../assets/person'
+import image from '../assets/default_profile.jpg'
 
 const Profile = () => {
   const [user, setUser] = useState({});
@@ -12,7 +12,7 @@ const Profile = () => {
     email: '',
     phone: '',
     address: '',
-    profilePicture: '', // Add a field for the profile picture
+    profilePicture: '',
   });
 
   const userEmail = localStorage.getItem('userEmail');
@@ -27,7 +27,7 @@ const Profile = () => {
             email: response.data.email,
             phone: response.data.phoneNumber,
             address: response.data.address,
-            profilePicture: response.data.profilePicture || 'image', // Set initial profile picture
+            profilePicture: response.data.profilePicture || image, // Set initial profile picture
           });
         })
         .catch((error) => {
@@ -92,7 +92,7 @@ const Profile = () => {
       <div className="page-container">
         <div className="profile-section">
           <img
-            src={user.profilePicture ? `data:image/png;base64,${user.profilePicture}` : 'image'} // Use a default image if not set
+            src={user.profilePicture ? `data:image/png;base64,${user.profilePicture}` : image} // Use a default image if not set
             alt="Profile"
             className="profile-picture"
           />
