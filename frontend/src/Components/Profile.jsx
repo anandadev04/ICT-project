@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Profile.css';
 import Navbar from './Navbar';
+import image from '../assets/person'
 
 const Profile = () => {
   const [user, setUser] = useState({});
@@ -26,7 +27,7 @@ const Profile = () => {
             email: response.data.email,
             phone: response.data.phoneNumber,
             address: response.data.address,
-            profilePicture: response.data.profilePicture || '', // Set initial profile picture
+            profilePicture: response.data.profilePicture || 'image', // Set initial profile picture
           });
         })
         .catch((error) => {
@@ -41,27 +42,26 @@ const Profile = () => {
 
   const saveClick = () => {
     const newData = {
-        userName: editInfo.name, // Correctly mapping to userName
-        email: editInfo.email,
-        phoneNumber: editInfo.phone, // Correctly mapping to phoneNumber
-        address: editInfo.address,
-        profilePicture: editInfo.profilePicture,
+      userName: editInfo.name,
+      email: editInfo.email,
+      phoneNumber: editInfo.phone,
+      address: editInfo.address,
+      profilePicture: editInfo.profilePicture,
     };
 
     console.log('Updating user with data:', newData); // Log the data being sent
     axios.put(`http://localhost:4000/user/${userEmail}`, newData)
-        .then((response) => {
-            setUser({
-                ...user,
-                ...newData,
-            });
-            setEditing(false);
-        })
-        .catch((error) => {
-            console.error('Error updating user data:', error);
+      .then((response) => {
+        setUser({
+          ...user,
+          ...newData,
         });
-};
-
+        setEditing(false);
+      })
+      .catch((error) => {
+        console.error('Error updating user data:', error);
+      });
+  };
 
   const change = (e) => {
     setInfo({
@@ -92,7 +92,7 @@ const Profile = () => {
       <div className="page-container">
         <div className="profile-section">
           <img
-            src={user.profilePicture ? `data:image/png;base64,${user.profilePicture}` : 'default-profile.png'} // Use a default image if not set
+            src={user.profilePicture ? `data:image/png;base64,${user.profilePicture}` : 'image'} // Use a default image if not set
             alt="Profile"
             className="profile-picture"
           />

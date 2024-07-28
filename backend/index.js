@@ -64,7 +64,7 @@ app.put('/user/:email', async (req, res) => {
 
         const updatedData = { userName, email, phoneNumber, address };
         if (profilePicture) {
-            updatedData.profilePicture = Buffer.from(profilePicture, 'base64'); // Convert Base64 string to Buffer
+            updatedData.profilePicture = profilePicture; 
         }
 
         const user = await userModel.findOneAndUpdate({ email }, updatedData, { new: true });
@@ -72,13 +72,14 @@ app.put('/user/:email', async (req, res) => {
             return res.status(404).send('User not found');
         }
 
-        console.log('User updated successfully:', updatedData); // Log successful update
+        console.log('User updated successfully:', updatedData);
         res.status(200).json(user);
     } catch (error) {
         console.error('Error updating user:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 app.listen(PORT, () => {
