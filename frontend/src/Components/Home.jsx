@@ -65,6 +65,7 @@ const Home = () => {
       <Navbar />
       <div className="content">
         <h1 className="heading">Upcoming Events</h1>
+        <br></br>
         <div className="cards-container">
           {rows.map((row, index) => (
             <Card key={index} sx={{ maxWidth: 320, borderRadius: "5%", overflow: 'hidden', backgroundColor: '#333', color: 'white' }}>
