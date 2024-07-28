@@ -22,9 +22,9 @@ app.post('/newuser', async (req, res) => {
 });
 
 // Login
-app.post('/login', async (req, res) => {
+app.get('/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password } = req.query;
         const user = await userModel.findOne({ email });
         if (!user) {
             return res.status(404).send('User not found');
@@ -41,6 +41,7 @@ app.post('/login', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 // Profile Fetch
 app.get('/user/:email', async (req, res) => {
