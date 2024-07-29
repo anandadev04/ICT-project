@@ -5,6 +5,9 @@ import Home from './Components/Home';
 import Profile from './Components/Profile'
 import EventList from './Components/EventList'
 import Register from './Components/Register'
+import Eventdetails from './Components/Eventdetails';
+
+
 
 function App() {
   return (
@@ -15,6 +18,7 @@ function App() {
         <Route path="/profile" element={<Profile />}/>
         <Route path="/event" element={<EventList />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/eventdetails" element={<Eventdetails />} />
       </Routes>
     </Router>
   );

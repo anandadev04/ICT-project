@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './Home.css';
+import { useNavigate } from 'react-router-dom';
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -60,17 +61,22 @@ const rows = [
 ];
 
 const Home = () => {
+  const navigate = useNavigate(); // Initialize navigate
+
+  const handleCardClick = () => {
+    navigate('/eventdetails'); // Navigate to Eventdetails page
+  }
+const [count, setCount] = useState(0)
   return (
     <div>
       <Navbar />
       <div className="content">
         <h1 className="heading">Upcoming Events</h1>
-        <br></br>
         <div className="cards-container">
           {rows.map((row, index) => (
             <Card key={index} sx={{ maxWidth: 320, borderRadius: "5%", overflow: 'hidden', backgroundColor: '#333', color: 'white' }}>
               <GradientCardContent>
-                <CardActionArea>
+                <CardActionArea onClick={handleCardClick}>
                   <StyledCardMedia
                     component="img"
                     height="250"

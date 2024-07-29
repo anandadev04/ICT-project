@@ -43,18 +43,6 @@ const LoginSignup = () => {
         alert('Failed to sign in: ' + error.response.data);
       });
     } else {
-      // Check for empty fields
-      if (!form.userName || !form.email || !form.phoneNumber || !form.address || !form.password) {
-        alert('All fields are required');
-        return;
-      }
-
-      // Check if email already exists
-      axios.get(`http://localhost:4000/user/${form.email}`)
-        .then((res) => {
-          if (res.data) {
-            alert('Email already exists');
-          } else {
             const userData = {
               userName: form.userName,
               email: form.email,
@@ -63,7 +51,7 @@ const LoginSignup = () => {
               password: form.password,
               profilePicture: ''
             };
-
+  
             axios.post('http://localhost:4000/newuser', userData)
               .then((res) => {
                 alert('User signed up successfully');
@@ -71,15 +59,12 @@ const LoginSignup = () => {
                 console.log(res);
               })
               .catch((error) => {
-                console.error('There was an error signing up!', error);
+                console.error('Error checking email existence:', error);
               });
-          }
-        })
-        .catch((error) => {
-          console.error('Error checking email existence:', error);
-        });
     }
   };
+  
+  
 
   return (
     <div className="container">

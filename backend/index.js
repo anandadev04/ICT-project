@@ -58,16 +58,17 @@ app.post('/login', async (req, res) => {
 // Profile Fetch
 app.get('/user/:email', async (req, res) => {
     try {
-        const user = await userModel.findOne({ email: req.params.email });
-        if (!user) {
-            return res.status(404).send(null);
-        }
-        res.status(200).json(user);
+      const user = await userModel.findOne({ email: req.params.email });
+      if (!user) {
+        return res.status(404).send(null);
+      }
+      res.status(200).json(user);
     } catch (error) {
-        console.error('Error fetching user:', error);
-        res.status(500).send('Internal Server Error');
+      console.error('Error fetching user:', error);
+      res.status(500).send('Internal Server Error');
     }
-});
+  });
+  
 
 // Update User
 app.put('/user/:email', async (req, res) => {
