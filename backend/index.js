@@ -1,30 +1,43 @@
 const express = require('express');
 const cors = require('cors');
-const app = new express();
+const app = express();
 const PORT = 4000;
 const userModel = require('./model/userData');
 require('./connection');
+
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));//form data handle
+app.use(express.urlencoded({ extended: true, limit: '10mb' })); // form data handle
 
 // Signup
 app.post('/newuser', async (req, res) => {
     try {
-        const item = req.body;
-        const datasave = new userModel(item);
-        const saveddata = await datasave.save();
-        res.send('Post Successful');
+        const { userName, email, phoneNumber, address, password } = req.body;
+
+        // Check for empty fields
+        if (!userName || !email || !phoneNumber || !address || !password) {
+            return res.status(400).send('All fields are required');
+        }
+
+        // Check if email already exists
+        const existingUser = await userModel.findOne({ email });
+        if (existingUser) {
+            return res.status(409).send('Email already exists');
+        }
+
+        const newUser = new userModel(req.body);
+        await newUser.save();
+        res.status(201).send('User signed up successfully');
     } catch (error) {
-        console.log(error);
+        console.error('Error creating user:', error);
         res.status(500).send('Error creating user');
     }
 });
 
 // Login
-app.get('/login', async (req, res) => {
+app.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.query;
+        const { email, password } = req.body;
         const user = await userModel.findOne({ email });
         if (!user) {
             return res.status(404).send('User not found');
@@ -42,13 +55,12 @@ app.get('/login', async (req, res) => {
     }
 });
 
-
 // Profile Fetch
 app.get('/user/:email', async (req, res) => {
     try {
         const user = await userModel.findOne({ email: req.params.email });
         if (!user) {
-            return res.status(404).send('User not found');
+            return res.status(404).send(null);
         }
         res.status(200).json(user);
     } catch (error) {
@@ -80,8 +92,6 @@ app.put('/user/:email', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
-
 
 app.listen(PORT, () => {
     console.log("Server is running on PORT 4000");

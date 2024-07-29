@@ -25,46 +25,61 @@ const LoginSignup = () => {
 
   const handleAction = () => {
     if (action === 'Login') {
-        axios.post('http://localhost:4000/login', {
-            email: form.email,
-            password: form.password
-        })
-        .then((res) => {
-            console.log('User signed in successfully');
-            localStorage.setItem('userEmail', form.email);
-            if (res.data.isAdmin) {
-                navigate('/admin-dashboard');
-            } else {
-                navigate('/home');
-            }
-        })
-        .catch((error) => {
-            console.error('Error signing in:', error);
-            alert('Failed to sign in: ' + error.response.data);
-        });
+      axios.post('http://localhost:4000/login', {
+        email: form.email,
+        password: form.password
+      })
+      .then((res) => {
+        console.log('User signed in successfully');
+        localStorage.setItem('userEmail', form.email);
+        if (res.data.isAdmin) {
+          navigate('/admin-dashboard');
+        } else {
+          navigate('/home');
+        }
+      })
+      .catch((error) => {
+        console.error('Error signing in:', error);
+        alert('Failed to sign in: ' + error.response.data);
+      });
     } else {
-        const userData = {
-            userName: form.userName,
-            email: form.email,
-            phoneNumber: form.phoneNumber,
-            address: form.address,
-            password: form.password,
-            profilePicture: ''
-        };
+      // Check for empty fields
+      if (!form.userName || !form.email || !form.phoneNumber || !form.address || !form.password) {
+        alert('All fields are required');
+        return;
+      }
 
-        axios.post('http://localhost:4000/newuser', userData)
-            .then((res) => {
+      // Check if email already exists
+      axios.get(`http://localhost:4000/user/${form.email}`)
+        .then((res) => {
+          if (res.data) {
+            alert('Email already exists');
+          } else {
+            const userData = {
+              userName: form.userName,
+              email: form.email,
+              phoneNumber: form.phoneNumber,
+              address: form.address,
+              password: form.password,
+              profilePicture: ''
+            };
+
+            axios.post('http://localhost:4000/newuser', userData)
+              .then((res) => {
                 alert('User signed up successfully');
                 setAction('Login');
                 console.log(res);
-            })
-            .catch((error) => {
+              })
+              .catch((error) => {
                 console.error('There was an error signing up!', error);
-            });
+              });
+          }
+        })
+        .catch((error) => {
+          console.error('Error checking email existence:', error);
+        });
     }
-};
-
-  
+  };
 
   return (
     <div className="container">
@@ -76,7 +91,7 @@ const LoginSignup = () => {
         {action === 'Sign up' && (
           <div className="input">
             <img src={user_icon} className="icon" alt="" />
-            <input type="text" name="userName" placeholder="Name" onChange={valueFetch} value={form.name} />
+            <input type="text" name="userName" placeholder="Name" onChange={valueFetch} value={form.userName} />
           </div>
         )}
         <div className="input">
@@ -86,7 +101,7 @@ const LoginSignup = () => {
         {action === 'Sign up' && (
           <div className="input">
             <img src={contact_icon} className="icon" alt="" />
-            <input type="text" name="phoneNumber" placeholder="Contact Number" onChange={valueFetch} value={form.contactNumber} />
+            <input type="text" name="phoneNumber" placeholder="Contact Number" onChange={valueFetch} value={form.phoneNumber} />
           </div>
         )}
         {action === 'Sign up' && (
