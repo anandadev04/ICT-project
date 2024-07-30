@@ -9,6 +9,24 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' })); // form data handle
 
+// Check if email already exists
+app.get('/check-email', async (req, res) => {
+    try {
+        const { email } = req.query;
+
+        if (!email) {
+            return res.status(400).send('Email is required');
+        }
+
+        const existingUser = await userModel.findOne({ email });
+        res.status(200).json({ exists: !!existingUser });
+    } catch (error) {
+        console.error('Error checking email:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 // Signup
 app.post('/newuser', async (req, res) => {
     try {
