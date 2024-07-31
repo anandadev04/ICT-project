@@ -3,6 +3,7 @@ const cors = require('cors');
 const app = express();
 const PORT = 4000;
 const userModel = require('./model/userData');
+const EventData = require('./model/eventData');
 require('./connection');
 
 app.use(cors());
@@ -111,6 +112,16 @@ app.put('/user/:email', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+app.get('/api/events', async (req, res) => {
+    try {
+      const events = await EventData.find();
+      res.json(events);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
 
 app.listen(PORT, () => {
     console.log("Server is running on PORT 4000");

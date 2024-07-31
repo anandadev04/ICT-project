@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
-import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -27,68 +27,46 @@ const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
   }
 }));
 
-const rows = [
-  {
-      title: "Lizard",
-      content: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-      image: "https://images.pexels.com/photos/2486168/pexels-photo-2486168.jpeg"
-  },
-  {
-      title: "Lizard",
-      content: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-      image: "https://images.pexels.com/photos/2486168/pexels-photo-2486168.jpeg"
-  },
-  {
-      title: "Lizard",
-      content: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-      image: "https://images.pexels.com/photos/2486168/pexels-photo-2486168.jpeg"
-  },
-  {
-    title: "Lizard",
-    content: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-    image: "https://images.pexels.com/photos/2486168/pexels-photo-2486168.jpeg"
-  },
-  {
-    title: "Lizard",
-    content: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-    image: "https://images.pexels.com/photos/2486168/pexels-photo-2486168.jpeg"
-  },
-  {
-    title: "Lizard",
-    content: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-    image: "https://images.pexels.com/photos/2486168/pexels-photo-2486168.jpeg"
-  }
-];
-
 const Home = () => {
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
+  const [events, setEvents] = useState([]);
 
-  const handleCardClick = () => {
-    navigate('/eventdetails'); // Navigate to Eventdetails page
-  }
-const [count, setCount] = useState(0)
+  useEffect(() => {
+    axios.get('http://localhost:4000/api/events')
+      .then(response => {
+        setEvents(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching events:', error);
+      });
+  }, []);
+
+  const handleCardClick = (eventId) => {
+    navigate(`/eventdetails/${eventId}`);
+  };
+
   return (
     <div>
       <Navbar />
       <div className="content">
         <h1 className="heading">Upcoming Events</h1>
         <div className="cards-container">
-          {rows.map((row, index) => (
-            <Card key={index} sx={{ maxWidth: 320, borderRadius: "5%", overflow: 'hidden', backgroundColor: '#333', color: 'white' }}>
+          {events.map((event) => (
+            <Card key={event._id} sx={{ maxWidth: 320, borderRadius: "5%", overflow: 'hidden', backgroundColor: '#333', color: 'white' }}>
               <GradientCardContent>
-                <CardActionArea onClick={handleCardClick}>
+                <CardActionArea onClick={() => handleCardClick(event._id)}>
                   <StyledCardMedia
                     component="img"
                     height="250"
-                    image={row.image}
-                    alt="green iguana"
+                    image={`data:image/png;base64,${event.picture}`}
+                    alt={event.eventName}
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div" color="white">
-                      {row.title}
+                      {event.eventName}
                     </Typography>
                     <Typography variant="body2" color="white">
-                      {row.content}
+                      {event.description}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
