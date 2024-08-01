@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
@@ -36,46 +37,33 @@ const StyledCard = styled(Card)(({ theme }) => ({
   }
 }));
 
-const rows = [
-   {
-    title: "Lizard",
-    content: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-    image: "https://images.pexels.com/photos/2486168/pexels-photo-2486168.jpeg"
-  },
-  {
-    title: "Lizard",
-    content: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-    image: "https://images.pexels.com/photos/2486168/pexels-photo-2486168.jpeg"
-  },
-  {
-    title: "Lizard",
-    content: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-    image: "https://images.pexels.com/photos/2486168/pexels-photo-2486168.jpeg"
-  },
-  {
-    title: "Lizard",
-    content: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-    image: "https://images.pexels.com/photos/2486168/pexels-photo-2486168.jpeg"
-  },
-  {
-    title: "Lizard",
-    content: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-    image: "https://images.pexels.com/photos/2486168/pexels-photo-2486168.jpeg"
-  },
-  {
-    title: "Lizard",
-    content: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-    image: "https://images.pexels.com/photos/2486168/pexels-photo-2486168.jpeg"
-  },
-];
+const getFirstSentence = (text) => {
+  const sentenceEnd = /[.!?]/;
+  const firstSentence = text.split(sentenceEnd)[0].trim();
+  return firstSentence + (firstSentence ? '.' : ''); // Add period if there was text
+};
 
 const Eventlist = () => {
-    const [liked, setLiked] = useState(Array(rows.length).fill(false));
+    const [liked, setLiked] = useState([]);
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(null);
-    const [newComment, setNewComment] = useState(Array(rows.length).fill(''));
-    const [comments, setComments] = useState(Array(rows.length).fill([]));
+    const [newComment, setNewComment] = useState([]);
+    const [comments, setComments] = useState([]);
     const navigate = useNavigate();
+    const [events, setEvents] = useState([]);
+
+    useEffect(() => {
+      axios.get('http://localhost:4000/api/events')
+        .then(response => {
+          setEvents(response.data);
+          setLiked(Array(response.data.length).fill(false));
+          setNewComment(Array(response.data.length).fill(''));
+          setComments(Array(response.data.length).fill([]));
+        })
+        .catch(error => {
+          console.error('Error fetching events:', error);
+        });
+    }, []);
   
     const handleLike = (index) => {
       const newLiked = [...liked];
@@ -116,29 +104,25 @@ const Eventlist = () => {
       navigate('/register'); 
     };
 
-    const handleCardClick = () => {
-      navigate(`/eventdetails`); // Assuming you have a dynamic route for event details
-    };
-
     return (
         <div className="eventlist-container">
           <Navbar/>
-          {rows.map((row, index) => (
-            <StyledCard key={index} className="styled-card" onClick={() => handleCardClick}>
-              <CardActionArea>
+          {events.map((event, index) => (
+            <StyledCard key={index} className="styled-card" >
+              <CardActionArea onClick={() => handleCardClick(index)}>
                 <StyledCardMedia
                   component="img"
                   height="250"
-                  image={row.image}
-                  alt="event image"
+                  image={`data:image/png;base64,${event.picture}`}
+                  alt={event.eventName}
                   className="card-media"
                 />
                 <CardContent className="card-content">
                   <Typography gutterBottom variant="h5" component="div" className="card-title">
-                    {row.title}
+                    {event.eventName}
                   </Typography>
                   <Typography variant="body2" className="card-description">
-                    {row.content}
+                    {getFirstSentence(event.description)}
                   </Typography>
                   <div className="icon-buttons">
                     <IconButton onClick={() => handleLike(index)} sx={{ color: 'white' }}>
@@ -247,4 +231,3 @@ const Eventlist = () => {
 }
 
 export default Eventlist;
-
