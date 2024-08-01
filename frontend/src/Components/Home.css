@@ -38,6 +38,7 @@
 
 .card {
   padding: 2em;
+  transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for transform and shadow */
 }
 
 .read-the-docs {
@@ -47,6 +48,10 @@
 .content {
   padding: 20px;
   padding-top: 10%;
+  min-height: 100vh; /* Prevent the page from shrinking */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .heading {
@@ -56,9 +61,24 @@
 }
 
 .cards-container {
-  display: flex; 
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 50px;
-  min-height: 100vh;
+}
+
+.card {
+  width: 320px; /* Fixed width */
+  height: 400px; /* Fixed height */
+  border-radius: 5%;
+  overflow: hidden;
+  background-color: #333;
+  color: white;
+  position: relative; /* Make the card's position relative for absolute child positioning */
+}
+
+.card:hover, .card:active {
+  transform: scale(1.05); /* Scale up the card slightly on hover or active */
+  z-index: 1; /* Bring the card to the front */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Add shadow for a lifted effect */
 }
