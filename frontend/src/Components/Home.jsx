@@ -41,8 +41,8 @@ const Home = () => {
       });
   }, []);
 
-  const handleCardClick = (eventId) => {
-    navigate(`/eventdetails/${eventId}`);
+  const handleCardClick = () => {
+    navigate(`/eventdetails`);
   };
 
   return (
@@ -54,7 +54,7 @@ const Home = () => {
           {events.map((event) => (
             <Card key={event._id} sx={{ maxWidth: 320, borderRadius: "5%", overflow: 'hidden', backgroundColor: '#333', color: 'white' }}>
               <GradientCardContent>
-                <CardActionArea onClick={() => handleCardClick(event._id)}>
+                <CardActionArea onClick={() => handleCardClick()}>
                   <StyledCardMedia
                     component="img"
                     height="250"

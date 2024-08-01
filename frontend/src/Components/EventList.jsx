@@ -116,15 +116,15 @@ const Eventlist = () => {
       navigate('/register'); 
     };
 
-    const handleCardClick = (index) => {
-      navigate(`/eventdetails/${index}`); // Assuming you have a dynamic route for event details
+    const handleCardClick = () => {
+      navigate(`/eventdetails`); // Assuming you have a dynamic route for event details
     };
 
     return (
         <div className="eventlist-container">
           <Navbar/>
           {rows.map((row, index) => (
-            <StyledCard key={index} className="styled-card" onClick={() => handleCardClick(index)}>
+            <StyledCard key={index} className="styled-card" onClick={() => handleCardClick}>
               <CardActionArea>
                 <StyledCardMedia
                   component="img"
