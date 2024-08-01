@@ -1,45 +1,67 @@
-/* src/components/Register.css */
+.register-container-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  background: linear-gradient(to right, #4a5b7d, #303131);
+  position: absolute; /* Make sure it covers the full page */
+  top: 0;
+  left: 0;
+}
 
-.register {
-    padding: 2rem;
-    text-align: center;
-  }
-  
-  .register h1 {
-    margin-bottom: 1rem;
-  }
-  
-  .form-group {
-    margin-bottom: 1rem;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-  }
-  
-  .form-group input {
-    width: 100%;
-    padding: 0.5rem;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
-  
-  button {
-    background-color: #007bff;
-    border: none;
-    color: white;
-    padding: 0.5rem 1rem;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 1rem;
-    margin-top: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 1rem;
+  width: 100%; /* Make sure it takes full width */
+  max-width: 600px; /* Optional: Set a max-width for better readability */
+}
+
+.register-paper {
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  background-color: #000; /* Black background for the form */
+  color: #f8f6f6; /* White text */
+  max-width: 400px;
+  width: 100%;
+  border: 1px solid #6f6a6a; /* Dark border to match the theme */
+}
+
+.register-typography {
+  margin-bottom: 1.5rem;
+  color: #e7dddd; 
+  font-weight: 500;
+}
+
+.register-form {
+  margin-top: 1rem;
+}
+
+.register-input {
+  margin-bottom: 1rem;
+}
+
+.register-input .MuiInputLabel-root {
+  color: #ede1e1; 
+}
+
+.register-input .MuiOutlinedInput-root {
+  border-radius: 8px;
+  border: 1px solid #666; /* Darker border for inputs */
+  background-color: #333; /* Dark background for inputs */
+}
+
+.register-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #a0bedf; /* Light blue border on focus */
+}
+
+.register-input .MuiOutlinedInput-input {
+  color: #cfdee4; /* White text inside input fields */
+}
+
   

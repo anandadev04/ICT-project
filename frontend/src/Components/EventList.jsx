@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -36,7 +37,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
 }));
 
 const rows = [
-  {
+   {
     title: "Lizard",
     content: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
     image: "https://images.pexels.com/photos/2486168/pexels-photo-2486168.jpeg"
@@ -74,6 +75,7 @@ const Eventlist = () => {
     const [selectedIndex, setSelectedIndex] = useState(null);
     const [newComment, setNewComment] = useState(Array(rows.length).fill(''));
     const [comments, setComments] = useState(Array(rows.length).fill([]));
+    const navigate = useNavigate();
   
     const handleLike = (index) => {
       const newLiked = [...liked];
@@ -93,7 +95,6 @@ const Eventlist = () => {
     const handleAddComment = () => {
         if (newComment[selectedIndex].trim()) {
           const newComments = [...comments];
-          // Add new comment at the beginning
           newComments[selectedIndex] = [newComment[selectedIndex], ...newComments[selectedIndex]];
           setComments(newComments);
           setNewComment(prev => {
@@ -109,12 +110,21 @@ const Eventlist = () => {
       updated[selectedIndex] = value;
       setNewComment(updated);
     };
-  
+
+    const handleRegisterClick = (event) => {
+      event.stopPropagation(); // Prevent the click event from propagating to parent elements
+      navigate('/register'); 
+    };
+
+    const handleCardClick = (index) => {
+      navigate(`/eventdetails/${index}`); // Assuming you have a dynamic route for event details
+    };
+
     return (
         <div className="eventlist-container">
           <Navbar/>
           {rows.map((row, index) => (
-            <StyledCard key={index} className="styled-card">
+            <StyledCard key={index} className="styled-card" onClick={() => handleCardClick(index)}>
               <CardActionArea>
                 <StyledCardMedia
                   component="img"
@@ -147,6 +157,7 @@ const Eventlist = () => {
                           backgroundColor: 'rgba(137, 182, 227, 0.4)', 
                         }
                       }}
+                      onClick={handleRegisterClick}
                     >
                       Register
                     </Button>
@@ -158,8 +169,7 @@ const Eventlist = () => {
           <Dialog
             open={openDialog}
             onClose={handleCloseDialog}
-            // fullWidth
-            maxWidth="20md" // Use "md" or adjust based on your design needs
+            maxWidth="md" // Use "md" or adjust based on your design needs
             sx={{
               '& .MuiDialog-paper': {
                 backgroundColor: '#424242', // Dark background for the dialog
@@ -238,39 +248,3 @@ const Eventlist = () => {
 
 export default Eventlist;
 
-
-// src/components/EventList.jsx
-
-// import React, { useState, useEffect } from 'react';
-// import EventItem from './EventItem';
-// import './EventList.css'; // Ensure you import the CSS file for styling
-// import Navbar from './Navbar';
-
-// const EventList = () => {
-//   // Hardcoded event data
-//   const [events, setEvents] = useState([]);
-
-//   useEffect(() => {
-//     // Hardcoded events for demonstration
-//     const hardcodedEvents = [
-//       { id: 1, title: 'PMI Kerala Chapter Annual Conference - WAVES 2024', description: 'Hyatt Regency Trivandrum, CV Raman Pillai Road, DPI, Thycaud, Thiruvananthapuram, Kerala, India, Trivandrum, India', date: 'Sat Aug 10 2024' },
-//       { id: 2, title: '5 Days Arts, Garment Designing & Crafts Classes in Trivandrum 2', description: 'VIGIL Arts and Crafts Training Center, Vrindavan Gardens, Pottakkuzhi, Pattom Junction Near Employees Provident Fund Office and P.S.C Office, Bus Stop, opposite Pattom, Vrindavan Gardens, Thiruvananthapuram, Kerala 695004, India, Trivandrum', date: '2024-07-26' },
-//       { id: 3, title: 'Reset Retreats India', description: 'Kovalam Kerala India, Neyyattinkara, Trivandrum, India', date: 'Sun Sep 01 2024' },
-//     ];
-//     setEvents(hardcodedEvents);
-//   }, []);
-
-//   return (
-//     <div className="event-list">
-//       <Navbar/>
-//       <h1>Events</h1>
-//       <div className="events-grid">
-//         {events.map(event => (
-//           <EventItem key={event.id} event={event} />
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default EventList;
