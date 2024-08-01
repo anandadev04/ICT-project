@@ -104,12 +104,16 @@ const Eventlist = () => {
       navigate('/register'); 
     };
 
+    const handleCardClick = (eventId) => {
+      navigate(`/eventdetails/${eventId}`); // Navigate to the event details page with the event ID
+    };
+
     return (
         <div className="eventlist-container">
           <Navbar/>
           {events.map((event, index) => (
-            <StyledCard key={index} className="styled-card" >
-              <CardActionArea onClick={() => handleCardClick(index)}>
+            <StyledCard key={event._id} className="styled-card">
+              <CardActionArea onClick={() => handleCardClick(event._id)}> {/* Pass event ID */}
                 <StyledCardMedia
                   component="img"
                   height="250"
