@@ -7,6 +7,7 @@ const eventSchema = new mongoose.Schema({
     timings: { type: String, required: true },
     days: { type: String, required: true },
     venue: { type: String, required: true },
+    likes: { type: Number, required: true},
     picture: { type: String, required: true } 
 });
 const EventData=mongoose.model('eventdetails',eventSchema);

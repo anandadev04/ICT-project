@@ -12,6 +12,7 @@ const Profile = () => {
     email: '',
     phone: '',
     address: '',
+    registered: '',
     profilePicture: '',
   });
 
@@ -27,6 +28,7 @@ const Profile = () => {
             email: response.data.email,
             phone: response.data.phoneNumber,
             address: response.data.address,
+            registered: response.data.registered,
             profilePicture: response.data.profilePicture || image, // Set initial profile picture
           });
         })
