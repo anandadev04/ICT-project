@@ -111,11 +111,6 @@ const Eventlist = () => {
       setNewComment(updated);
     };
 
-<<<<<<< HEAD
-=======
-   
-
->>>>>>> 96ad1ee5ad6b91db7b67551e15f940f6080e11a9
     const handleRegisterClick = (event) => {
       event.stopPropagation(); // Prevent the click event from propagating to parent elements
       navigate('/register'); 
