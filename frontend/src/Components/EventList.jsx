@@ -99,6 +99,10 @@ const Eventlist = () => {
       setNewComment(updated);
     };
 
+    const handleCardClick = () => {
+      navigate('/eventdetails');
+    };
+
     const handleRegisterClick = (event) => {
       event.stopPropagation(); // Prevent the click event from propagating to parent elements
       navigate('/register'); 
