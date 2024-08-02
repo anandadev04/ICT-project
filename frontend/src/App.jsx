@@ -19,7 +19,6 @@ function App() {
         <Route path="/event" element={<EventList />} />
         <Route path="/register" element={<Register />} />
         <Route path="/eventdetails/:eventId" element={<Eventdetails />} />
-        <Route path="/regback" element={<EventList />}/>
       </Routes>
     </Router>
   );
