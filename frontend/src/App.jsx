@@ -18,8 +18,13 @@ function App() {
         <Route path="/profile" element={<Profile />}/>
         <Route path="/event" element={<EventList />} />
         <Route path="/register" element={<Register />} />
+<<<<<<< HEAD
         <Route path="/eventdetails" element={<Eventdetails />} />
         <Route path="/regback" element={<EventList />}/>
+=======
+        <Route path="/eventdetails/:eventId" element={<Eventdetails />} />
+        <Route path="/regback" element={<Eventdetails />}/>
+>>>>>>> b4d554ef0227db238793fa903cb9f4ecd589c479
       </Routes>
     </Router>
   );

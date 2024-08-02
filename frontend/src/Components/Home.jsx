@@ -1,3 +1,4 @@
+// Home.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Home.css';
@@ -41,8 +42,18 @@ const Home = () => {
       });
   }, []);
 
-  const handleCardClick = () => {
-    navigate(`/eventdetails`);
+  const handleCardClick = (eventId) => {
+    navigate(`/eventdetails/${eventId}`);
+  };
+
+  const getFirstSentence = (text) => {
+    const sentenceEnd = /[.!?]/;
+    const firstSentence = text.split(sentenceEnd)[0].trim();
+    return firstSentence + (firstSentence ? '.' : ''); // Add period if there was text
+  };
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   return (
@@ -54,7 +65,7 @@ const Home = () => {
           {events.map((event) => (
             <Card key={event._id} sx={{ maxWidth: 320, borderRadius: "5%", overflow: 'hidden', backgroundColor: '#333', color: 'white' }}>
               <GradientCardContent>
-                <CardActionArea onClick={() => handleCardClick()}>
+                <CardActionArea onClick={() => handleCardClick(event._id)}>
                   <StyledCardMedia
                     component="img"
                     height="250"
@@ -66,8 +77,11 @@ const Home = () => {
                       {event.eventName}
                     </Typography>
                     <Typography variant="body2" color="white">
-                      {event.description}
+                      Start Date: {formatDate(event.startDate)}
                     </Typography>
+                    <Typography variant="body2" color="white">
+                    {getFirstSentence(event.description)}
+                  </Typography>
                   </CardContent>
                 </CardActionArea>
               </GradientCardContent>
@@ -80,3 +94,5 @@ const Home = () => {
 }
 
 export default Home;
+
+

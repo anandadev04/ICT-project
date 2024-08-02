@@ -123,6 +123,20 @@ app.get('/api/events', async (req, res) => {
     }
   });
 
+// Get event by ID
+app.get('/api/events/:eventId', async (req, res) => {
+    try {
+      const event = await EventData.findById(req.params.eventId);
+      if (!event) {
+        return res.status(404).send('Event not found');
+      }
+      res.json(event);
+    } catch (error) {
+      console.error('Error fetching event:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
 app.listen(PORT, () => {
     console.log("Server is running on PORT 4000");
 });
