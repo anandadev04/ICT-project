@@ -83,16 +83,32 @@ const Eventlist = () => {
       setOpenDialog(false);
     };
   
-    const handleAddComment = () => {
+    const handleAddComment = async () => {
         if (newComment[selectedIndex].trim()) {
-          const newComments = [...comments];
-          newComments[selectedIndex] = [newComment[selectedIndex], ...newComments[selectedIndex]];
-          setComments(newComments);
-          setNewComment(prev => {
-            const updated = [...prev];
-            updated[selectedIndex] = '';
-            return updated;
-          });
+            try {
+                const selectedEvent = events[selectedIndex];
+                const commentData = {
+                    eventName: selectedEvent.eventName,
+                    userName: 'CurrentUserName', // Replace with actual user name
+                    comments: newComment[selectedIndex].trim(),
+                };
+                
+                const response = await axios.post('http://localhost:4000/api/comments', commentData);
+                if (response.status === 201) {
+                    const newComments = [...comments];
+                    newComments[selectedIndex] = [newComment[selectedIndex], ...newComments[selectedIndex]];
+                    setComments(newComments);
+                    setNewComment(prev => {
+                        const updated = [...prev];
+                        updated[selectedIndex] = '';
+                        return updated;
+                    });
+                } else {
+                    console.error('Failed to add comment:', response.data);
+                }
+            } catch (error) {
+                console.error('Error adding comment:', error);
+            }
         }
     };
   
@@ -169,72 +185,86 @@ const Eventlist = () => {
                 overflowY: 'auto', // Add scroll for content overflow
               },
               '& .MuiDialogTitle-root': {
-                backgroundColor: '#333', // Dark background for the dialog title
-                color: '#e0e0e0', // Light text color for contrast
-                position: 'relative', // Positioning for close icon
+                backgroundColor: '#333333', // Slightly darker background for the title
+                color: '#ffffff', // Title text color
               },
               '& .MuiDialogContent-root': {
-                backgroundColor: '#424242', // Dark background for the dialog content
-                color: '#e0e0e0', // Light text color for contrast
-                overflowY: 'auto', // Add scroll for content overflow
+                padding: '24px', // Add padding for content
               },
-              '& .MuiDialogActions-root': {
-                backgroundColor: '#333', // Dark background for dialog actions
-                color: '#e0e0e0', // Light text color for contrast
-              }
             }}
           >
             <DialogTitle>
-              Add a Comment
+              {events[selectedIndex]?.eventName}
               <IconButton
                 edge="end"
                 color="inherit"
                 onClick={handleCloseDialog}
-                sx={{ position: 'absolute', right: 16, top: 8, color: 'white' }}
+                aria-label="close"
+                sx={{
+                  position: 'absolute',
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
               >
                 <CloseIcon />
               </IconButton>
             </DialogTitle>
             <DialogContent>
-              <div className="comments-section">
-                <div className="comments-list">
-                  {comments[selectedIndex]?.map((comment, i) => (
-                    <Typography key={i} variant="body2" className="comment">
-                      {comment}
-                    </Typography>
-                  ))}
-                </div>
-                <div className="comment-input-container">
-                  <TextField
-                    label="Add a comment"
-                    multiline
-                    rows={2}
-                    value={newComment[selectedIndex] || ''}
-                    onChange={(e) => handleCommentChange(e.target.value)}
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    className="comment-textfield"
-                    InputProps={{
-                      style: { color: 'white' }, // Text color in the input field
-                    }}
-                    InputLabelProps={{
-                      style: { color: 'white' }, // Label color in the input field
-                    }}
-                  />
-                  <IconButton
-                    onClick={handleAddComment}
-                    className="send-button"
-                    sx={{ color: 'white' }}
-                  >
-                    <SendIcon />
-                  </IconButton>
-                </div>
-              </div>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Add a comment"
+                fullWidth
+                variant="outlined"
+                multiline
+                rows={4}
+                value={newComment[selectedIndex]}
+                onChange={(e) => handleCommentChange(e.target.value)}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: '#616161', // Input border color
+                    },
+                    '&:hover fieldset': {
+                      borderColor: '#9e9e9e', // Border color on hover
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#ffffff', // Border color when focused
+                    },
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: '#bdbdbd', // Label color
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: '#ffffff', // Label color when focused
+                  },
+                }}
+              />
             </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog} color="primary" sx={{ color: '#81bde8' }}>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleAddComment}
+                color="primary"
+                variant="contained"
+                endIcon={<SendIcon />}
+                sx={{
+                  backgroundColor: '#81bde8', // Light blue background for the button
+                  color: '#212121', // Dark text color for contrast
+                  '&:hover': {
+                    backgroundColor: '#4b9cd3', // Darker blue on hover
+                  },
+                }}
+              >
+                Send
+              </Button>
+            </DialogActions>
           </Dialog>
         </div>
     );
-}
+};
 
 export default Eventlist;

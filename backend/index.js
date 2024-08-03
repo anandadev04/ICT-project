@@ -5,6 +5,7 @@ const PORT = 4000;
 const userModel = require('./model/userData');
 const EventData = require('./model/eventData');
 const RegisterData = require('./model/registerData');
+const CommentData = require('./model/commentData');
 require('./connection');
 
 app.use(cors());
@@ -192,6 +193,24 @@ app.get('/api/user-registrations/:email', async (req, res) => {
     } catch (error) {
         console.error('Error fetching registered events count:', error);
         res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+app.post('/api/comments', async (req, res) => {
+    try {
+        const { eventName, userName, comments } = req.body;
+
+        // Check for empty fields
+        if (!eventName || !userName || !comments) {
+            return res.status(400).send('All fields are required');
+        }
+
+        const newComment = new CommentData({ eventName, userName, comments });
+        await newComment.save();
+        res.status(201).json({ message: 'Comment added successfully' });
+    } catch (error) {
+        console.error('Error adding comment:', error);
+        res.status(500).send('Error adding comment');
     }
 });
 
