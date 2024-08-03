@@ -76,6 +76,7 @@
 .comment-input-container {
   display: flex;
   align-items: center;
+  margin-bottom: 1rem; /* Space below the input container */
 }
 
 .comment-textfield {
@@ -85,23 +86,8 @@
 }
 
 .send-button {
-  margin-top: 10px;
+  color: white;
 }
 
 
 
-
-/* src/components/EventList.css */
-/* 
-.event-list {
-    padding: 2rem;
-    text-align: center;
-  }
-  
-  .events-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: center;
-  }
-   */

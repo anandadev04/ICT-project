@@ -208,6 +208,7 @@ app.get('/api/user-registrations/:email', async (req, res) => {
     }
 });
 
+//comments
 app.post('/api/comments', async (req, res) => {
     try {
         const { eventName, userName, comments } = req.body;
@@ -223,6 +224,17 @@ app.post('/api/comments', async (req, res) => {
     } catch (error) {
         console.error('Error adding comment:', error);
         res.status(500).send('Error adding comment');
+    }
+});
+
+app.get('/api/comments', async (req, res) => {
+    try {
+        const { eventName } = req.query;
+        const comments = await CommentData.find({ eventName });
+        res.json(comments);
+    } catch (error) {
+        console.error('Error fetching comments:', error);
+        res.status(500).send('Internal Server Error');
     }
 });
 

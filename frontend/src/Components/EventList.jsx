@@ -14,7 +14,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
 import Navbar from './Navbar';
-import './EventList.css'; 
+import './EventList.css';
 
 const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
   position: 'relative',
@@ -44,217 +44,215 @@ const getFirstSentence = (text) => {
 };
 
 const Eventlist = () => {
-    const [liked, setLiked] = useState([]);
-    const [openDialog, setOpenDialog] = useState(false);
-    const [selectedIndex, setSelectedIndex] = useState(null);
-    const [newComment, setNewComment] = useState([]);
-    const [comments, setComments] = useState([]);
-    const navigate = useNavigate();
-    const [events, setEvents] = useState([]);
+  const [liked, setLiked] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [newComment, setNewComment] = useState('');
+  const [comments, setComments] = useState([]);
+  const navigate = useNavigate();
+  const [events, setEvents] = useState([]);
 
-    useEffect(() => {
-      axios.get('http://localhost:4000/api/events')
-        .then(response => {
-          setEvents(response.data);
-          setLiked(Array(response.data.length).fill(false));
-          setNewComment(Array(response.data.length).fill(''));
-          setComments(Array(response.data.length).fill([]));
+  useEffect(() => {
+    axios.get('http://localhost:4000/api/events')
+      .then(response => {
+        setEvents(response.data);
+        setLiked(Array(response.data.length).fill(false));
+      })
+      .catch(error => {
+        console.error('Error fetching events:', error);
+      });
+  }, []);
+
+  const handleLike = (index, event) => {
+    event.stopPropagation();
+    const newLiked = [...liked];
+    newLiked[index] = !newLiked[index];
+    setLiked(newLiked);
+  };
+
+  const handleOpenDialog = (index, event) => {
+    event.stopPropagation();
+    setSelectedIndex(index);
+    setOpenDialog(true);
+    fetchComments(events[index].eventName);
+  };
+
+  const handleCloseDialog = (event) => {
+    event.stopPropagation();
+    setOpenDialog(false);
+    setComments([]);  // Clear comments when dialog closes
+  };
+
+  const fetchComments = (eventName) => {
+    axios.get(`http://localhost:4000/api/comments?eventName=${eventName}`)
+      .then(response => {
+        setComments(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching comments:', error);
+      });
+  };
+
+  const handleAddComment = () => {
+    if (newComment.trim()) {
+      const commentData = {
+        eventName: events[selectedIndex].eventName,
+        userName: localStorage.getItem('userName'),
+        comments: newComment
+      };
+
+      axios.post('http://localhost:4000/api/comments', commentData)
+        .then(() => {
+          setComments(prevComments => [commentData, ...prevComments]);
+          setNewComment('');
         })
         .catch(error => {
-          console.error('Error fetching events:', error);
+          console.error('Error adding comment:', error);
+          alert('Failed to add comment: ' + error.response.data);
         });
-    }, []);
-  
-    const handleLike = (index, event) => {
-      event.stopPropagation(); // Prevent the click event from propagating to parent elements
-      const newLiked = [...liked];
-      newLiked[index] = !newLiked[index];
-      setLiked(newLiked);
-    };
-  
-    const handleOpenDialog = (index, event) => {
-      event.stopPropagation(); // Prevent the click event from propagating to parent elements
-      setSelectedIndex(index);
-      setOpenDialog(true);
-      fetchComments(event.eventName); // Fetch comments for the selected event
-    };
-  
-    const handleCloseDialog = (event) => {
-      event.stopPropagation(); // Prevent the click event from propagating to parent elements
-      setOpenDialog(false);
-    };
+    }
+  };
 
-    const fetchComments = (eventName) => {
-      axios.get(`http://localhost:4000/api/comments?eventName=${eventName}`)
-        .then(response => {
-          const newComments = [...comments];
-          newComments[selectedIndex] = response.data;
-          setComments(newComments);
-        })
-        .catch(error => {
-          console.error('Error fetching comments:', error);
-        });
-    };
-  
-    const handleAddComment = () => {
-        if (newComment[selectedIndex].trim()) {
-          const commentData = {
-            eventName: events[selectedIndex].eventName, // Get the event name
-            userName: localStorage.getItem('userName'), // Get the user name from local storage
-            comments: newComment[selectedIndex]
-          };
+  const handleCommentChange = (value) => {
+    setNewComment(value);
+  };
 
-          axios.post('http://localhost:4000/api/comments', commentData)
-            .then(() => {
-              // Update the local comments state after successful post
-              const newComments = [...comments];
-              newComments[selectedIndex] = [newComment[selectedIndex], ...newComments[selectedIndex]];
-              setComments(newComments);
-              setNewComment(prev => {
-                const updated = [...prev];
-                updated[selectedIndex] = '';
-                return updated;
-              });
-            })
-            .catch(error => {
-              console.error('Error adding comment:', error);
-              alert('Failed to add comment: ' + error.response.data);
-            });
-        }
-    };
-  
-    const handleCommentChange = (value) => {
-      const updated = [...newComment];
-      updated[selectedIndex] = value;
-      setNewComment(updated);
-    };
+  const handleRegisterClick = (event, eventName) => {
+    event.stopPropagation();
+    navigate('/register', { state: { eventName } });
+  };
 
-    const handleRegisterClick = (event, eventName) => {
-      event.stopPropagation(); // Prevent the click event from propagating to parent elements
-      navigate('/register', { state: { eventName } }); 
-    };
+  const handleCardClick = (eventId) => {
+    navigate(`/eventdetails/${eventId}`);
+  };
 
-    const handleCardClick = (eventId) => {
-      navigate(`/eventdetails/${eventId}`); // Navigate to the event details page with the event ID
-    };
-
-    return (
-        <div className="eventlist-container">
-          <Navbar/>
-          {events.map((event, index) => (
-            <StyledCard key={event._id} className="styled-card">
-              <CardActionArea onClick={() => handleCardClick(event._id)}> {/* Pass event ID */}
-                <StyledCardMedia
-                  component="img"
-                  height="250"
-                  image={`data:image/png;base64,${event.picture}`}
-                  alt={event.eventName}
-                  className="card-media"
-                />
-                <CardContent className="card-content">
-                  <Typography gutterBottom variant="h5" component="div" className="card-title">
-                    {event.eventName}
-                  </Typography>
-                  <Typography variant="body2" className="card-description">
-                    {getFirstSentence(event.description)}
-                  </Typography>
-                  <div className="icon-buttons">
-                    <IconButton onClick={(event) => handleLike(index, event)} sx={{ color: 'white' }}>
-                      {liked[index] ? <FavoriteIcon sx={{ color: 'red' }} /> : <FavoriteBorderIcon />}
-                    </IconButton>
-                    <IconButton onClick={(event) => handleOpenDialog(index, event)}>
-                      <CommentIcon sx={{ color: 'white' }} />
-                    </IconButton>
-                    <Button
-                      variant="outlined"
-                      sx={{ 
-                        borderColor: 'white', 
-                        color: 'white',      
-                        '&:hover': {
-                          borderColor: '#81bde8', 
-                          backgroundColor: 'rgba(137, 182, 227, 0.4)', 
-                        }
-                      }}
-                      onClick={(e) => handleRegisterClick(e, event.eventName)}
-                    >
-                      Register
-                    </Button>
-                  </div>
-                </CardContent>
-              </CardActionArea>
-            </StyledCard>
-          ))}
-          <Dialog
-            open={openDialog}
-            onClose={handleCloseDialog}
-            maxWidth="md" // Use "md" or adjust based on your design needs
-            sx={{
-              '& .MuiDialog-paper': {
-                backgroundColor: '#424242', // Dark background for the dialog
-                color: '#e0e0e0', // Light text color for contrast
-                height: '80vh', // Set the height of the dialog
-                overflowY: 'auto', // Add scroll for content overflow
-              },
-              '& .MuiDialogTitle-root': {
-                backgroundColor: '#333', // Dark background for the dialog title
-                color: '#e0e0e0', // Light text color for contrast
-                position: 'relative', // Positioning for close icon
-              },
-              '& .MuiDialogContent-root': {
-                backgroundColor: '#424242', // Dark background for the dialog content
-                color: '#e0e0e0', // Light text color for contrast
-                overflowY: 'auto', // Add scroll for content overflow
-              },
-              '& .MuiDialogActions-root': {
-                backgroundColor: '#333', // Dark background for dialog actions
-                color: '#e0e0e0', // Light text color for contrast
-              }
-            }}
-          >
-            <DialogTitle>
-              Add a Comment
-              <IconButton
-                edge="end"
-                color="inherit"
-                onClick={handleCloseDialog}
-                sx={{ position: 'absolute', right: 16, top: 8, color: 'white' }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </DialogTitle>
-            <DialogContent>
-              <div className="comments-section">
-                <div className="existing-comments">
-                  {comments[selectedIndex] && comments[selectedIndex].length > 0 ? (
-                    comments[selectedIndex].map((comment, index) => (
-                      <Typography key={index} variant="body2">
-                        <strong>{comment.userName}:</strong> {comment.comments}
-                      </Typography>
-                    ))
-                  ) : (
-                    <Typography variant="body2" sx={{ color: '#e0e0e0' }}>
-                      No comments yet.
-                    </Typography>
-                  )}
-                </div>
-                <TextField
-                  label="Your Comment"
+  return (
+    <div className="eventlist-container">
+      <Navbar />
+      {events.map((event, index) => (
+        <StyledCard key={event._id} className="styled-card">
+          <CardActionArea onClick={() => handleCardClick(event._id)}>
+            <StyledCardMedia
+              component="img"
+              height="250"
+              image={`data:image/png;base64,${event.picture}`}
+              alt={event.eventName}
+              className="card-media"
+            />
+            <CardContent className="card-content">
+              <Typography gutterBottom variant="h5" component="div" className="card-title">
+                {event.eventName}
+              </Typography>
+              <Typography variant="body2" className="card-description">
+                {getFirstSentence(event.description)}
+              </Typography>
+              <div className="icon-buttons">
+                <IconButton onClick={(event) => handleLike(index, event)} sx={{ color: 'white' }}>
+                  {liked[index] ? <FavoriteIcon sx={{ color: 'red' }} /> : <FavoriteBorderIcon />}
+                </IconButton>
+                <IconButton onClick={(event) => handleOpenDialog(index, event)}>
+                  <CommentIcon sx={{ color: 'white' }} />
+                </IconButton>
+                <Button
                   variant="outlined"
-                  fullWidth
-                  value={newComment[selectedIndex] || ''}
-                  onChange={(e) => handleCommentChange(e.target.value)}
-                  sx={{ backgroundColor: '#ffffff', marginTop: '16px' }}
-                />
+                  sx={{
+                    borderColor: 'white',
+                    color: 'white',
+                    '&:hover': {
+                      borderColor: '#81bde8',
+                      backgroundColor: 'rgba(137, 182, 227, 0.4)',
+                    }
+                  }}
+                  onClick={(e) => handleRegisterClick(e, event.eventName)}
+                >
+                  Register
+                </Button>
               </div>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleAddComment} sx={{ color: 'white' }}>
-                <SendIcon />
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-    );
+            </CardContent>
+          </CardActionArea>
+        </StyledCard>
+      ))}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="md"
+        sx={{
+          '& .MuiDialog-paper': {
+            backgroundColor: '#424242',
+            color: '#e0e0e0',
+            height: '80vh',
+            overflowY: 'auto',
+          },
+          '& .MuiDialogTitle-root': {
+            backgroundColor: '#333',
+            color: '#e0e0e0',
+            position: 'relative',
+          },
+          '& .MuiDialogContent-root': {
+            backgroundColor: '#424242',
+            color: '#e0e0e0',
+            overflowY: 'auto',
+          },
+          '& .MuiDialogActions-root': {
+            backgroundColor: '#333',
+            color: '#e0e0e0',
+          }
+        }}
+      >
+        <DialogTitle>
+          Add a Comment
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={handleCloseDialog}
+            sx={{ position: 'absolute', right: 16, top: 16 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+  <div className="comment-input-container">
+    <TextField
+      autoFocus
+      margin="dense"
+      id="comment"
+      label="Type your comment"
+      type="text"
+      fullWidth
+      variant="outlined"
+      value={newComment}
+      onChange={(e) => handleCommentChange(e.target.value)}
+      InputProps={{
+        style: { color: '#e0e0e0' },
+      }}
+      InputLabelProps={{
+        style: { color: '#81bde8' },
+      }}
+      className="comment-textfield"
+    />
+    <IconButton
+      color="primary"
+      onClick={handleAddComment}
+      className="send-button"
+    >
+      <SendIcon />
+    </IconButton>
+  </div>
+
+  <div className="comments-list">
+    {comments.map((comment, index) => (
+      <div key={index} className="comment">
+        <Typography variant="subtitle1" sx={{ color: '#81bde8' }}>{comment.userName}</Typography>
+        <Typography variant="body2">{comment.comments}</Typography>
+      </div>
+    ))}
+  </div>
+</DialogContent>
+
+      
+      </Dialog>
+    </div>
+  );
 };
 
 export default Eventlist;
