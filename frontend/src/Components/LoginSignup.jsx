@@ -124,9 +124,6 @@ const LoginSignup = () => {
           <input type="password" name="password" placeholder="Password" onChange={valueFetch} value={form.password} />
         </div>
       </div>
-      {action === 'Login' && (
-        <div className="forgot-password">Lost Password?<span>Click Here</span></div>
-      )}
       {action === 'Sign up' && (
         <div className="terms-container">
           <input
