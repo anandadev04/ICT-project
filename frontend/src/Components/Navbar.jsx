@@ -6,7 +6,7 @@ import logo from '../assets/logo1.png'; // Adjust the path to your logo image
 const Navbar = () => {
   return (
     <header className='header'>
-      <a href="/" className="nav-logo">
+      <a href="" className="nav-logo">
         <img src={logo} alt="Logo" className="logo-image" />
       </a>
 
