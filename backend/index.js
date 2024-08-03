@@ -31,6 +31,7 @@ app.get('/check-email', async (req, res) => {
 
 
 // Signup
+// Signup
 app.post('/newuser', async (req, res) => {
     try {
         const { userName, email, phoneNumber, address, password } = req.body;
@@ -46,7 +47,15 @@ app.post('/newuser', async (req, res) => {
             return res.status(409).send('Email already exists');
         }
 
-        const newUser = new userModel(req.body);
+        // Create a new user
+        const newUser = new userModel({
+            userName, // Ensure userName is set correctly
+            email,
+            phoneNumber,
+            address,
+            password
+        });
+
         await newUser.save();
         res.status(201).send('User signed up successfully');
     } catch (error) {
@@ -66,8 +75,10 @@ app.post('/login', async (req, res) => {
         if (user.password !== password) {
             return res.status(401).send('Invalid credentials');
         }
+        // Include the user's username in the response
         res.status(200).json({
             message: 'Login successful',
+            userName: user.userName,  // Add this line to include username
             isAdmin: user.userName.toLowerCase() === 'admin'
         });
     } catch (error) {
@@ -75,6 +86,7 @@ app.post('/login', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 // Profile Fetch with Registered Events Count
 app.get('/user/:email', async (req, res) => {

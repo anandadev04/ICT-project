@@ -76,39 +76,50 @@ const Eventlist = () => {
       event.stopPropagation(); // Prevent the click event from propagating to parent elements
       setSelectedIndex(index);
       setOpenDialog(true);
+      fetchComments(event.eventName); // Fetch comments for the selected event
     };
   
     const handleCloseDialog = (event) => {
       event.stopPropagation(); // Prevent the click event from propagating to parent elements
       setOpenDialog(false);
     };
+
+    const fetchComments = (eventName) => {
+      axios.get(`http://localhost:4000/api/comments?eventName=${eventName}`)
+        .then(response => {
+          const newComments = [...comments];
+          newComments[selectedIndex] = response.data;
+          setComments(newComments);
+        })
+        .catch(error => {
+          console.error('Error fetching comments:', error);
+        });
+    };
   
-    const handleAddComment = async () => {
+    const handleAddComment = () => {
         if (newComment[selectedIndex].trim()) {
-            try {
-                const selectedEvent = events[selectedIndex];
-                const commentData = {
-                    eventName: selectedEvent.eventName,
-                    userName: 'CurrentUserName', // Replace with actual user name
-                    comments: newComment[selectedIndex].trim(),
-                };
-                
-                const response = await axios.post('http://localhost:4000/api/comments', commentData);
-                if (response.status === 201) {
-                    const newComments = [...comments];
-                    newComments[selectedIndex] = [newComment[selectedIndex], ...newComments[selectedIndex]];
-                    setComments(newComments);
-                    setNewComment(prev => {
-                        const updated = [...prev];
-                        updated[selectedIndex] = '';
-                        return updated;
-                    });
-                } else {
-                    console.error('Failed to add comment:', response.data);
-                }
-            } catch (error) {
-                console.error('Error adding comment:', error);
-            }
+          const commentData = {
+            eventName: events[selectedIndex].eventName, // Get the event name
+            userName: localStorage.getItem('userName'), // Get the user name from local storage
+            comments: newComment[selectedIndex]
+          };
+
+          axios.post('http://localhost:4000/api/comments', commentData)
+            .then(() => {
+              // Update the local comments state after successful post
+              const newComments = [...comments];
+              newComments[selectedIndex] = [newComment[selectedIndex], ...newComments[selectedIndex]];
+              setComments(newComments);
+              setNewComment(prev => {
+                const updated = [...prev];
+                updated[selectedIndex] = '';
+                return updated;
+              });
+            })
+            .catch(error => {
+              console.error('Error adding comment:', error);
+              alert('Failed to add comment: ' + error.response.data);
+            });
         }
     };
   
@@ -185,81 +196,60 @@ const Eventlist = () => {
                 overflowY: 'auto', // Add scroll for content overflow
               },
               '& .MuiDialogTitle-root': {
-                backgroundColor: '#333333', // Slightly darker background for the title
-                color: '#ffffff', // Title text color
+                backgroundColor: '#333', // Dark background for the dialog title
+                color: '#e0e0e0', // Light text color for contrast
+                position: 'relative', // Positioning for close icon
               },
               '& .MuiDialogContent-root': {
-                padding: '24px', // Add padding for content
+                backgroundColor: '#424242', // Dark background for the dialog content
+                color: '#e0e0e0', // Light text color for contrast
+                overflowY: 'auto', // Add scroll for content overflow
               },
+              '& .MuiDialogActions-root': {
+                backgroundColor: '#333', // Dark background for dialog actions
+                color: '#e0e0e0', // Light text color for contrast
+              }
             }}
           >
             <DialogTitle>
-              {events[selectedIndex]?.eventName}
+              Add a Comment
               <IconButton
                 edge="end"
                 color="inherit"
                 onClick={handleCloseDialog}
-                aria-label="close"
-                sx={{
-                  position: 'absolute',
-                  right: 8,
-                  top: 8,
-                  color: (theme) => theme.palette.grey[500],
-                }}
+                sx={{ position: 'absolute', right: 16, top: 8, color: 'white' }}
               >
                 <CloseIcon />
               </IconButton>
             </DialogTitle>
             <DialogContent>
-              <TextField
-                autoFocus
-                margin="dense"
-                label="Add a comment"
-                fullWidth
-                variant="outlined"
-                multiline
-                rows={4}
-                value={newComment[selectedIndex]}
-                onChange={(e) => handleCommentChange(e.target.value)}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: '#616161', // Input border color
-                    },
-                    '&:hover fieldset': {
-                      borderColor: '#9e9e9e', // Border color on hover
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#ffffff', // Border color when focused
-                    },
-                  },
-                  '& .MuiInputLabel-root': {
-                    color: '#bdbdbd', // Label color
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: '#ffffff', // Label color when focused
-                  },
-                }}
-              />
+              <div className="comments-section">
+                <div className="existing-comments">
+                  {comments[selectedIndex] && comments[selectedIndex].length > 0 ? (
+                    comments[selectedIndex].map((comment, index) => (
+                      <Typography key={index} variant="body2">
+                        <strong>{comment.userName}:</strong> {comment.comments}
+                      </Typography>
+                    ))
+                  ) : (
+                    <Typography variant="body2" sx={{ color: '#e0e0e0' }}>
+                      No comments yet.
+                    </Typography>
+                  )}
+                </div>
+                <TextField
+                  label="Your Comment"
+                  variant="outlined"
+                  fullWidth
+                  value={newComment[selectedIndex] || ''}
+                  onChange={(e) => handleCommentChange(e.target.value)}
+                  sx={{ backgroundColor: '#ffffff', marginTop: '16px' }}
+                />
+              </div>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCloseDialog} color="primary" sx={{ color: '#81bde8' }}>
-                Cancel
-              </Button>
-              <Button
-                onClick={handleAddComment}
-                color="primary"
-                variant="contained"
-                endIcon={<SendIcon />}
-                sx={{
-                  backgroundColor: '#81bde8', // Light blue background for the button
-                  color: '#212121', // Dark text color for contrast
-                  '&:hover': {
-                    backgroundColor: '#4b9cd3', // Darker blue on hover
-                  },
-                }}
-              >
-                Send
+              <Button onClick={handleAddComment} sx={{ color: 'white' }}>
+                <SendIcon />
               </Button>
             </DialogActions>
           </Dialog>

@@ -31,7 +31,10 @@ const LoginSignup = () => {
       })
       .then((res) => {
         console.log('User signed in successfully');
+        // Store the user email and username in local storage
         localStorage.setItem('userEmail', form.email);
+        localStorage.setItem('userName', res.data.userName); // Assuming the username is returned in the response
+
         if (res.data.isAdmin) {
           navigate('/admin-dashboard');
         } else {
@@ -67,6 +70,8 @@ const LoginSignup = () => {
             axios.post('http://localhost:4000/newuser', userData)
               .then((res) => {
                 alert('User signed up successfully');
+                // Store the username in local storage
+                localStorage.setItem('userName', userData.userName);
                 setAction('Login');
                 console.log(res);
               })
