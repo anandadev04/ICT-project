@@ -6,6 +6,7 @@ const userModel = require('./model/userData');
 const EventData = require('./model/eventData');
 const RegisterData = require('./model/registerData');
 const CommentData = require('./model/commentData');
+const LikeDetails = require('./model/likeDetails');
 require('./connection');
 
 app.use(cors());
@@ -208,6 +209,7 @@ app.get('/api/user-registrations/:email', async (req, res) => {
     }
 });
 
+//comments
 app.post('/api/comments', async (req, res) => {
     try {
         const { eventName, userName, comments } = req.body;
@@ -226,6 +228,63 @@ app.post('/api/comments', async (req, res) => {
     }
 });
 
+app.get('/api/comments', async (req, res) => {
+    try {
+        const { eventName } = req.query;
+        const comments = await CommentData.find({ eventName });
+        res.json(comments);
+    } catch (error) {
+        console.error('Error fetching comments:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Fetch likes for a specific user
+app.get('/api/likes', async (req, res) => {
+    try {
+      const { email } = req.query;
+      const likes = await LikeDetails.find({ email });
+      res.json(likes);
+    } catch (error) {
+      console.error('Error fetching likes:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+  
+  // Endpoint to like an event
+  app.post('/api/like', async (req, res) => {
+    try {
+      const like = new LikeDetails(req.body);
+      await like.save();
+      res.status(201).send('Like saved successfully');
+    } catch (error) {
+      console.error('Error saving like:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+// Assuming you have an express app setup
+app.post('/api/unlike', async (req, res) => {
+    const { email, eventName } = req.body;
+    try {
+      await LikeDetails.findOneAndDelete({ email, eventName });
+      res.status(200).json({ message: 'Event unliked successfully' });
+    } catch (error) {
+      res.status(500).json({ error: 'Error unliking event' });
+    }
+  });
+  
+
+app.get('/api/likedEvents', async (req, res) => {
+const { email } = req.query;
+try {
+    const likedEvents = await LikeDetails.find({ email });
+    res.status(200).json(likedEvents);
+} catch (error) {
+    res.status(500).json({ error: 'Error fetching liked events' });
+}
+});
+  
 
 app.listen(PORT, () => {
     console.log("Server is running on PORT 4000");
