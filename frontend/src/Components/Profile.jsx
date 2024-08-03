@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Profile.css';
 import Navbar from './Navbar';
-import image from '../assets/default_profile.jpg'
+import image from '../assets/default_profile.jpg';
 
 const Profile = () => {
   const [user, setUser] = useState({});
@@ -12,7 +12,7 @@ const Profile = () => {
     email: '',
     phone: '',
     address: '',
-    registered: '',
+    registered: 0,  // Initialize registered events count
     profilePicture: '',
   });
 
@@ -28,21 +28,13 @@ const Profile = () => {
             email: response.data.email,
             phone: response.data.phoneNumber,
             address: response.data.address,
+            registered: response.data.registered, // Set the registered events count
             profilePicture: response.data.profilePicture || image, // Set initial profile picture
           });
         })
         .catch((error) => {
           console.error('Error fetching user data:', error);
         });
-
-        // Fetch the count of registered events
-      axios.get(`http://localhost:4000/api/user-registrations/${userEmail}`)
-      .then((response) => {
-        setRegisteredEventsCount(response.data.registeredEventsCount);
-      })
-      .catch((error) => {
-        console.error('Error fetching registered events count:', error);
-      });
     }
   }, [userEmail]);
 
@@ -141,7 +133,7 @@ const Profile = () => {
               <p>Email: {user.email}</p>
               <p>Phone: {user.phoneNumber}</p>
               <p>Address: {user.address}</p>
-              <p>Events Registered: {user.registeredEvent}</p>
+              <p>Events Registered: {editInfo.registered}</p> {/* Display registered events count */}
               <button onClick={editClick} className="profile-button edit-button">Edit</button>
             </div>
           )}
