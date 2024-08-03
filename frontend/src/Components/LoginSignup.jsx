@@ -17,6 +17,7 @@ const LoginSignup = () => {
     password: ''
   });
   const [action, setAction] = useState('Login');
+  const [termsAccepted, setTermsAccepted] = useState(false); // New state for terms acceptance
   const navigate = useNavigate();
 
   const valueFetch = (e) => {
@@ -31,10 +32,7 @@ const LoginSignup = () => {
       })
       .then((res) => {
         console.log('User signed in successfully');
-        // Store the user email and username in local storage
         localStorage.setItem('userEmail', form.email);
-        localStorage.setItem('userName', res.data.userName); // Assuming the username is returned in the response
-
         if (res.data.isAdmin) {
           navigate('/admin-dashboard');
         } else {
@@ -49,6 +47,12 @@ const LoginSignup = () => {
       // Check if any field is empty
       if (!form.userName || !form.email || !form.phoneNumber || !form.address || !form.password) {
         alert('Please fill in all the fields.');
+        return;
+      }
+
+      // Check if terms are accepted
+      if (!termsAccepted) {
+        alert('You must accept the Terms and Conditions to sign up.');
         return;
       }
 
@@ -70,9 +74,8 @@ const LoginSignup = () => {
             axios.post('http://localhost:4000/newuser', userData)
               .then((res) => {
                 alert('User signed up successfully');
-                // Store the username in local storage
-                localStorage.setItem('userName', userData.userName);
                 setAction('Login');
+                setTermsAccepted(false); // Reset terms acceptance on sign-up
                 console.log(res);
               })
               .catch((error) => {
@@ -121,8 +124,24 @@ const LoginSignup = () => {
           <input type="password" name="password" placeholder="Password" onChange={valueFetch} value={form.password} />
         </div>
       </div>
+      {action === 'Login' && (
+        <div className="forgot-password">Lost Password?<span>Click Here</span></div>
+      )}
+      {action === 'Sign up' && (
+        <div className="terms-container">
+          <input
+            type="checkbox"
+            className="terms-checkbox"
+            checked={termsAccepted}
+            onChange={(e) => setTermsAccepted(e.target.checked)}
+          />
+          <label className="terms-label" onClick={() => setTermsAccepted(!termsAccepted)}>
+            I accept the <a href="/terms-and-conditions">Terms and Conditions</a>
+          </label>
+        </div>
+      )}
       <div className="submit-container">
-        <div className="submit" onClick={handleAction}>
+        <div className="submit" onClick={handleAction} disabled={action === 'Sign up' && !termsAccepted}>
           {action === 'Login' ? 'Sign In' : 'Sign Up'}
         </div>
         {/* Toggle Buttons */}

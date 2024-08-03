@@ -108,5 +108,32 @@
 
 input::placeholder {
     color: #1E3050;
-    opacity: 1; /* Firefox */
+    opacity: 1; 
+}
+
+.terms-container {
+    display: flex;
+    align-items: center;
+    margin-top: 20px; /* Space above the checkbox */
+    margin-left: auto; /* Align with the input fields */
+    margin-right: auto; /* Align with the input fields */
+    width: 480px; /* Match the width of the input fields */
+}
+
+.terms-checkbox {
+    margin-right: 10px; /* Space between checkbox and label */
+}
+
+.terms-label {
+    color: #e5ebee; /* Text color for the label */
+    cursor: pointer; /* Cursor change on hover */
+}
+
+.terms-label a {
+    color: #eff3f5; /* Link color */
+    text-decoration: underline; /* Underline for links */
+}
+
+.terms-label a:hover {
+    color: #0d3f54; /* Darker shade on hover */
 }
