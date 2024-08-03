@@ -74,20 +74,34 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// Profile Fetch
+// Profile Fetch with Registered Events Count
 app.get('/user/:email', async (req, res) => {
     try {
-      const user = await userModel.findOne({ email: req.params.email });
-      if (!user) {
-        return res.status(404).send(null);
-      }
-      res.status(200).json(user);
+        const email = req.params.email;
+
+        // Find user by email
+        const user = await userModel.findOne({ email });
+
+        if (!user) {
+            return res.status(404).send(null);
+        }
+
+        // Count registered events for the user
+        const registeredCount = await RegisterData.countDocuments({ email });
+
+        // Update the user's registered count if it's different
+        if (user.registered !== registeredCount) {
+            user.registered = registeredCount;
+            await user.save(); // Save the updated user data
+        }
+
+        // Send the user data with the registered count
+        res.status(200).json({ ...user.toObject(), registered: registeredCount });
     } catch (error) {
-      console.error('Error fetching user:', error);
-      res.status(500).send('Internal Server Error');
+        console.error('Error fetching user:', error);
+        res.status(500).send('Internal Server Error');
     }
-  });
-  
+});
 
 // Update User
 app.put('/user/:email', async (req, res) => {
@@ -123,6 +137,17 @@ app.get('/api/events', async (req, res) => {
     }
   });
 
+// Get all events
+app.get('/api/events', async (req, res) => {
+    try {
+        const events = await EventData.find();
+        res.json(events);
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 // Get event by ID
 app.get('/api/events/:eventId', async (req, res) => {
     try {
@@ -136,6 +161,39 @@ app.get('/api/events/:eventId', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
+
+// Registration Endpoint
+app.post('/api/register', async (req, res) => {
+    try {
+        const { name, email, phone, eventName } = req.body;
+
+        // Check for empty fields
+        if (!name || !email || !phone || !eventName) {
+            return res.status(400).send('All fields are required');
+        }
+
+        const newEventData = new RegisterData({ name, email, phone, eventName });
+        await newEventData.save();
+        res.status(201).json({ message: 'Registration successful' });
+    } catch (error) {
+        console.error('Error registering for event:', error);
+        res.status(500).send('Error registering for event');
+    }
+});
+  
+
+// New endpoint to get the number of registered events for a user
+app.get('/api/user-registrations/:email', async (req, res) => {
+    try {
+        const { email } = req.params;
+        const count = await RegisterData.countDocuments({ email });
+        res.status(200).json({ registeredEventsCount: count });
+    } catch (error) {
+        console.error('Error fetching registered events count:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log("Server is running on PORT 4000");

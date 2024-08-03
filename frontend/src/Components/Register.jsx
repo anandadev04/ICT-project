@@ -1,12 +1,45 @@
 import React from 'react';
 import { TextField, Button, Grid, Typography, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './Register.css'; 
 
 const Register = () => {
   const navigate = useNavigate();
-  const handleRegisterSub = () => {
-    navigate('/regback'); 
+  const location = useLocation();
+  const { eventName } = location.state || {};
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleRegisterSub = (e) => {
+    e.preventDefault();
+
+    const data = {
+      ...formData,
+      eventName,
+    };
+
+    console.log('Registering with data:', data); // Debugging log
+
+    axios.post('http://localhost:4000/api/register', data)
+      .then((response) => {
+        console.log('Registration successful:', response.data);
+        navigate('/regback'); 
+      })
+      .catch((error) => {
+        console.error('Error registering:', error.response ? error.response.data : error.message);
+      });
   };
 
   return (
@@ -24,32 +57,41 @@ const Register = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                className="register-input"
-                variant="outlined"
-                required
-                fullWidth
-                label="Name"
-                autoFocus
-              />
+                  className="register-input"
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  autoFocus
+                />
             </Grid>
             <Grid item xs={12}>
-              <TextField
+            <TextField
                 className="register-input"
                 variant="outlined"
                 required
                 fullWidth
                 label="Email Address"
+                name="email"
                 type="email"
+                value={formData.email}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
+            <TextField
                 className="register-input"
                 variant="outlined"
                 required
                 fullWidth
                 label="Phone Number"
+                name="phone"
                 type="tel"
+                value={formData.phone}
+                onChange={handleChange}
               />
             </Grid>
           </Grid>

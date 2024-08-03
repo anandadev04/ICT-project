@@ -28,13 +28,21 @@ const Profile = () => {
             email: response.data.email,
             phone: response.data.phoneNumber,
             address: response.data.address,
-            registered: response.data.registered,
             profilePicture: response.data.profilePicture || image, // Set initial profile picture
           });
         })
         .catch((error) => {
           console.error('Error fetching user data:', error);
         });
+
+        // Fetch the count of registered events
+      axios.get(`http://localhost:4000/api/user-registrations/${userEmail}`)
+      .then((response) => {
+        setRegisteredEventsCount(response.data.registeredEventsCount);
+      })
+      .catch((error) => {
+        console.error('Error fetching registered events count:', error);
+      });
     }
   }, [userEmail]);
 

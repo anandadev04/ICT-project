@@ -102,9 +102,9 @@ const Eventlist = () => {
       setNewComment(updated);
     };
 
-    const handleRegisterClick = (event) => {
+    const handleRegisterClick = (event, eventName) => {
       event.stopPropagation(); // Prevent the click event from propagating to parent elements
-      navigate('/register'); 
+      navigate('/register', { state: { eventName } }); 
     };
 
     const handleCardClick = (eventId) => {
@@ -148,7 +148,7 @@ const Eventlist = () => {
                           backgroundColor: 'rgba(137, 182, 227, 0.4)', 
                         }
                       }}
-                      onClick={handleRegisterClick}
+                      onClick={(e) => handleRegisterClick(e, event.eventName)}
                     >
                       Register
                     </Button>
