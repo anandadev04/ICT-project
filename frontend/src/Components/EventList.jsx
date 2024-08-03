@@ -65,18 +65,21 @@ const Eventlist = () => {
         });
     }, []);
   
-    const handleLike = (index) => {
+    const handleLike = (index, event) => {
+      event.stopPropagation(); // Prevent the click event from propagating to parent elements
       const newLiked = [...liked];
       newLiked[index] = !newLiked[index];
       setLiked(newLiked);
     };
   
-    const handleOpenDialog = (index) => {
+    const handleOpenDialog = (index, event) => {
+      event.stopPropagation(); // Prevent the click event from propagating to parent elements
       setSelectedIndex(index);
       setOpenDialog(true);
     };
   
-    const handleCloseDialog = () => {
+    const handleCloseDialog = (event) => {
+      event.stopPropagation(); // Prevent the click event from propagating to parent elements
       setOpenDialog(false);
     };
   
@@ -129,10 +132,10 @@ const Eventlist = () => {
                     {getFirstSentence(event.description)}
                   </Typography>
                   <div className="icon-buttons">
-                    <IconButton onClick={() => handleLike(index)} sx={{ color: 'white' }}>
+                    <IconButton onClick={(event) => handleLike(index, event)} sx={{ color: 'white' }}>
                       {liked[index] ? <FavoriteIcon sx={{ color: 'red' }} /> : <FavoriteBorderIcon />}
                     </IconButton>
-                    <IconButton onClick={() => handleOpenDialog(index)}>
+                    <IconButton onClick={(event) => handleOpenDialog(index, event)}>
                       <CommentIcon sx={{ color: 'white' }} />
                     </IconButton>
                     <Button
