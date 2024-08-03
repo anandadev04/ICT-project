@@ -4,6 +4,7 @@ const app = express();
 const PORT = 4000;
 const userModel = require('./model/userData');
 const EventData = require('./model/eventData');
+const RegisterData = require('./model/registerData');
 require('./connection');
 
 app.use(cors());
