@@ -53,21 +53,56 @@ const Eventlist = () => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:4000/api/events')
-      .then(response => {
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/events');
         setEvents(response.data);
-        setLiked(Array(response.data.length).fill(false));
-      })
-      .catch(error => {
+
+        const userEmail = localStorage.getItem('userEmail');
+        const likedResponse = await axios.get(`http://localhost:4000/api/likedEvents?email=${userEmail}`);
+        const likedEvents = likedResponse.data.map(event => event.eventName);
+
+        const initialLiked = response.data.map(event => likedEvents.includes(event.eventName));
+        setLiked(initialLiked);
+        setNewComment('');
+        setComments(Array(response.data.length).fill([]));
+      } catch (error) {
         console.error('Error fetching events:', error);
-      });
+      }
+    };
+
+    fetchEvents();
   }, []);
 
-  const handleLike = (index, event) => {
+  const handleLike = async (index, event) => {
     event.stopPropagation();
     const newLiked = [...liked];
     newLiked[index] = !newLiked[index];
     setLiked(newLiked);
+
+    const email = localStorage.getItem('userEmail');
+    const likeData = {
+      username: localStorage.getItem('userName'),
+      email,
+      eventName: events[index].eventName,
+    };
+
+    try {
+      if (newLiked[index]) {
+        // User is liking the event
+        await axios.post('http://localhost:4000/api/like', likeData);
+      } else {
+        // User is unliking the event
+        await axios.post('http://localhost:4000/api/unlike', likeData);
+      }
+    } catch (error) {
+      console.error('Error handling like:', error);
+      setLiked(prev => {
+        const updated = [...prev];
+        updated[index] = !updated[index]; // revert to previous state
+        return updated;
+      });
+    }
   };
 
   const handleOpenDialog = (index, event) => {
@@ -211,48 +246,46 @@ const Eventlist = () => {
           </IconButton>
         </DialogTitle>
         <DialogContent>
-  <div className="comment-input-container">
-    <TextField
-      autoFocus
-      margin="dense"
-      id="comment"
-      label="Type your comment"
-      type="text"
-      fullWidth
-      variant="outlined"
-      value={newComment}
-      onChange={(e) => handleCommentChange(e.target.value)}
-      InputProps={{
-        style: { color: '#e0e0e0' },
-      }}
-      InputLabelProps={{
-        style: { color: '#81bde8' },
-      }}
-      className="comment-textfield"
-    />
-    <IconButton
-      color="primary"
-      onClick={handleAddComment}
-      className="send-button"
-    >
-      <SendIcon />
-    </IconButton>
-  </div>
-
-  <div className="comments-list">
-    {comments.map((comment, index) => (
-      <div key={index} className="comment">
-        <Typography variant="subtitle1" sx={{ color: '#81bde8' }}>{comment.userName}</Typography>
-        <Typography variant="body2">{comment.comments}</Typography>
-      </div>
-    ))}
-  </div>
-</DialogContent>
-
-      
+          <div className="comment-input-container">
+            <TextField
+              autoFocus
+              margin="dense"
+              id="comment"
+              label="Type your comment"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={newComment}
+              onChange={(e) => handleCommentChange(e.target.value)}
+              InputProps={{
+                style: { color: '#e0e0e0' },
+              }}
+              InputLabelProps={{
+                style: { color: '#81bde8' },
+              }}
+              className="comment-textfield"
+            />
+            <IconButton
+              color="primary"
+              onClick={handleAddComment}
+              className="send-button"
+            >
+              <SendIcon />
+            </IconButton>
+          </div>
+          <div className="comments-list">
+            {comments.map((comment, index) => (
+              <div key={index} className="comment">
+                <Typography variant="subtitle1" sx={{ color: '#81bde8' }}>{comment.userName}</Typography>
+                <Typography variant="body2">{comment.comments}</Typography>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
       </Dialog>
     </div>
   );
 };
 
 export default Eventlist;
+
