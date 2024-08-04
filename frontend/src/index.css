@@ -4,7 +4,7 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(243, 235, 235, 0.87);
+  color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
   font-synthesis: none;
@@ -23,13 +23,12 @@ a:hover {
 }
 
 body {
-  /* background-image: url('/src/assets/wall1.jpg');
+  background-image: url('/src/assets/wall1.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed; */
+  background-attachment: fixed;
   min-height: 100vh;
-  background-color: white;
 }
 
 h1 {

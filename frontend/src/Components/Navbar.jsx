@@ -5,20 +5,18 @@ import logo from '../assets/logo1.png'; // Adjust the path to your logo image
 
 const Navbar = () => {
   return (
-    <div className='navbar-container'>
-      <header className='header'>
-        <a href="" className="nav-logo">
-          <img src={logo} alt="Logo" className="logo-image" />
-        </a>
+    <header className='header'>
+      <a href="" className="nav-logo">
+        <img src={logo} alt="Logo" className="logo-image" />
+      </a>
 
-        <nav className="navbar">
-          <Link to="/home">Home</Link>
-          <Link to="/profile">Profile</Link>
-          <Link to="/event">Events</Link>
-          <Link to="/">Log Out</Link>
-        </nav>
-      </header>
-    </div>
+      <nav className="navbar">
+        <Link to="/home">Home</Link>
+        <Link to="/profile">Profile</Link>
+        <Link to="/event">Events</Link>
+        <Link to="/">Log Out</Link>
+      </nav>
+    </header>
   );
 };
 

@@ -1,49 +1,73 @@
-.navbar-container {
-  display: flex;
-  flex-wrap: wrap;
-  max-width: 100%;
+/* Home.css */
+
+#root {
+  max-width: 1280px;
   margin: 0 auto;
   text-align: center;
-  padding-top: 13%;
-  background-color: white;
 }
 
-.navbar-container .card {
-  padding: 1em;
+.logo {
+  height: em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
   transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for transform and shadow */
-  
 }
 
-.navbar-container .read-the-docs {
+.read-the-docs {
   color: #888;
 }
 
-.navbar-container .content {
+.content {
   padding: 20px;
+  padding-top: 10%;
   min-height: 100vh; /* Prevent the page from shrinking */
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.navbar-container .heading {
+.heading {
   margin: 20px 0; /* Adjust this value as needed */
-  color: #2a1d1d;
+  color: #333;
   font-size: 2.5rem;
-  padding-left: 40%;
 }
 
-
-.navbar-container .cards-container {
+.cards-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 50px;
-  padding-top: 10%;
-  padding-left: 5%;
 }
 
-.navbar-container .card {
+.card {
   width: 320px; /* Fixed width */
   height: 400px; /* Fixed height */
   border-radius: 5%;
@@ -53,30 +77,8 @@
   position: relative; /* Make the card's position relative for absolute child positioning */
 }
 
-.navbar-container .card:hover, .navbar-container .card:active {
+.card:hover, .card:active {
   transform: scale(1.05); /* Scale up the card slightly on hover or active */
   z-index: 1; /* Bring the card to the front */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Add shadow for a lifted effect */
-}
-
-.banner-container {
-  position: relative;
-  width: 100%; /* Ensure the container takes up the full width of its parent */
-  height: 400px; /* Set the height for the container */
-}
-
-.banner-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Ensure the image covers the container while maintaining its aspect ratio */
-}
-
-.overlay-image {
-  position: absolute;
-  top: 50%; /* Position the overlay image vertically centered (adjust as needed) */
-  left: 50%; /* Position the overlay image horizontally centered (adjust as needed) */
-  transform: translate(-50%, -50%); /* Center the image exactly */
-  width: 100px; /* Set the width of the overlay image */
-  height: auto; /* Maintain aspect ratio */
-  z-index: 10; /* Ensure the overlay image is on top */
 }
