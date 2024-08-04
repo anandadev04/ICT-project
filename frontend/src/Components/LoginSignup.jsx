@@ -1,4 +1,3 @@
-// src/Components/LoginSignup.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -18,7 +17,7 @@ const LoginSignup = () => {
     password: ''
   });
   const [action, setAction] = useState('Login');
-  const [termsAccepted, setTermsAccepted] = useState(false); // State for terms acceptance
+  const [termsAccepted, setTermsAccepted] = useState(false); // New state for terms acceptance
   const navigate = useNavigate();
 
   const valueFetch = (e) => {
@@ -134,7 +133,7 @@ const LoginSignup = () => {
             onChange={(e) => setTermsAccepted(e.target.checked)}
           />
           <label className="terms-label" onClick={() => setTermsAccepted(!termsAccepted)}>
-            I accept the <a href="/terms-and-conditions" onClick={(e) => { e.preventDefault(); navigate('/terms-and-conditions'); }}>Terms and Conditions</a>
+            I accept the <a href="/terms-and-conditions">Terms and Conditions</a>
           </label>
         </div>
       )}
