@@ -1,127 +1,216 @@
-.header {
-    position: absolute;
-    top: 5%;
-    left: 0;
-    width: 100%;
-    padding: 20px 10%;
-    background: transparent;.header {
-      position: absolute;
-      top: 5%;
-      left: 0;
-      width: 100%;
-      padding: 20px 10%;
-      background: transparent;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 100;
-      box-sizing: border-box;
-    }
-    
-    .nav-logo {
-      font-size: 32px;
-      color: #fff;
-      font-weight: 700;
-      text-decoration: none; /* Ensure no underline for the link */
-    }
-    
-    .logo-image {
-      height: 70px; /* Adjust the height as needed */
-      will-change: filter;
-      transition: filter 300ms;
-    }
-    
-    .navbar a {
-      position: relative;
-      font-size: 20px;
-      color: #0c0707;
-      font-weight: 500;
-      margin-left: 40px;
-      text-decoration: none; /* Ensure no underline for the links */
-    }
-    
-    .navbar a::before {
-      content: '';
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: #fff;
-      transition: .3s;
-    }
-    
-    .navbar a:hover::before {
-      width: 100%;
-    }
-    
-    .logo-image:hover {
-      filter: drop-shadow(0 0 2em #646cffaa);
-    }
-    
-    .navbar a.react:hover .logo-image {
-      filter: drop-shadow(0 0 2em #61dafbaa);
-    }
-    
-    @keyframes logo-spin {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg);
-      }
-    }
-    
-    @media (prefers-reduced-motion: no-preference) {
-      .navbar a:nth-of-type(2) .logo-image {
-        animation: logo-spin infinite 20s linear;
-      }
-    }
-    
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 100;
-    box-sizing: border-box;
+/* Scoped to .header-container */
+.header-container .header {
+  position: absolute;
+  top: 5%;
+  left: 0;
+  width: 100%;
+  padding: 20px 10%;
+  background: transparent;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.header-container .nav-logo {
+  font-size: 32px;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none; /* Ensure no underline for the link */
+}
+
+.header-container .logo-image {
+  height: 70px; /* Adjust the height as needed */
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.header-container .navbar a {
+  position: relative;
+  font-size: 20px;
+  color: #0c0707;
+  font-weight: 500;
+  margin-left: 40px;
+  text-decoration: none; /* Ensure no underline for the links */
+}
+
+.header-container .navbar a::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #fff;
+  transition: .3s;
+}
+
+.header-container .navbar a:hover::before {
+  width: 100%;
+}
+
+.header-container .logo-image:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.header-container .navbar a.react:hover .logo-image {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
   }
-  
-  .nav-logo {
-    font-size: 32px;
-    color: #fff;
-    font-weight: 700;
-    text-decoration: none; /* Ensure no underline for the link */
+  to {
+    transform: rotate(360deg);
   }
-  
-  .logo-image {
-      height: 40px; /* Adjust the height as needed */
-      transition: transform 0.3s ease; /* Smooth transition for scaling effect */
-    }
-    
-  .logo-image:hover {
-      transform: scale(1.2); /* Scale the logo by 10% */
-      filter: drop-shadow(0 0 2em #646cffaa);
-    }
-  
-  .navbar a {
-    position: relative;
-    font-size: 20px;
-    color: #0c0707;
-    font-weight: 500;
-    margin-left: 40px; 
-    text-decoration: none; /* Ensure no underline for the links */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .header-container .navbar a:nth-of-type(2) .logo-image {
+    animation: logo-spin infinite 20s linear;
   }
-  
-  .navbar a::before {
-    content: '';  
-    position: absolute; 
-    top: 100%;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: #fff;
-    transition: .3s;
+}
+
+.header-container .logo-image {
+  height: 40px; /* Adjust the height as needed */
+  transition: transform 0.3s ease; /* Smooth transition for scaling effect */
+}
+
+.header-container .logo-image:hover {
+  transform: scale(1.2); /* Scale the logo by 10% */
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.header-container .navbar a {
+  position: relative;
+  font-size: 20px;
+  color: #080808;
+  font-weight: 500;
+  margin-left: 40px; 
+  text-decoration: none; /* Ensure no underline for the links */
+}
+
+.header-container .navbar a::before {
+  content: '';  
+  position: absolute; 
+  top: 100%;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #fff;
+  transition: .3s;
+}
+
+.header-container .navbar a:hover::before {
+  width: 100%;
+}
+/* Scoped to .navbar-container */
+.navbar-container .header {
+  position: absolute;
+  top: 5%;
+  left: 0;
+  width: 100%;
+  padding: 20px 10%;
+  background: transparent;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.navbar-container .nav-logo {
+  font-size: 32px;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none; /* Ensure no underline for the link */
+}
+
+.navbar-container .logo-image {
+  height: 70px; /* Adjust the height as needed */
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.navbar-container .navbar a {
+  position: relative;
+  font-size: 20px;
+  color: #0c0707;
+  font-weight: 500;
+  margin-left: 40px;
+  text-decoration: none; /* Ensure no underline for the links */
+}
+
+.navbar-container .navbar a::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #fff;
+  transition: .3s;
+}
+
+.navbar-container .navbar a:hover::before {
+  width: 100%;
+}
+
+.navbar-container .logo-image:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.navbar-container .navbar a.react:hover .logo-image {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
   }
-  
-  .navbar a:hover::before {
-    width: 100%;
+  to {
+    transform: rotate(360deg);
   }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .navbar-container .navbar a:nth-of-type(2) .logo-image {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.navbar-container .logo-image {
+  height: 40px; /* Adjust the height as needed */
+  transition: transform 0.3s ease; /* Smooth transition for scaling effect */
+}
+
+.navbar-container .logo-image:hover {
+  transform: scale(1.2); /* Scale the logo by 20% */
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.navbar-container .navbar a {
+  position: relative;
+  font-size: 20px;
+  color: #080808;
+  font-weight: 500;
+  margin-left: 40px; 
+  text-decoration: none; /* Ensure no underline for the links */
+}
+
+.navbar-container .navbar a::before {
+  content: '';  
+  position: absolute; 
+  top: 100%;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #fff;
+  transition: .3s;
+}
+
+.navbar-container .navbar a:hover::before {
+  width: 100%;
+}
