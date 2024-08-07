@@ -1,139 +1,154 @@
-.container {
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-    width: 600px;
-    background: transparent;
-    padding-bottom: 30px;
+/* LoginSignup.css */
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap");
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Quicksand", sans-serif;
+  background: #111; /* Set background to black */
+  overflow: auto; /* Ensure scrolling is enabled */
 }
 
-.login-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 9px;
-    width: 100%;
-    margin-top: 30px;
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #111;
+  background-size: cover;
 }
 
-.text {
-    color: #114155;
-    font-size: 48px;
-    font-weight: 700;
+.ring {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.underline {
-    width: 61px;
-    height: 6px;
-    background: #114155;
-    border-radius: 9px;
+.ring i {
+  position: absolute;
+  inset: 0;
+  border: 2px solid #fff;
+  transition: 0.5s;
 }
 
-.inputs {
-    margin-top: 55px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
+.ring i:nth-child(1) {
+  border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+  animation: animate 6s linear infinite;
 }
 
-.input {
-    display: flex;
-    align-items: center;
-    margin: auto;
-    width: 480px;
-    height: 80px;
-    background: #eaeaea;
-    border-radius: 6px;
+.ring i:nth-child(2) {
+  border-radius: 41% 44% 56% 59% / 38% 62% 63% 37%;
+  animation: animate 4s linear infinite;
 }
 
-.input img {
-    margin: 0px 30px;
+.ring i:nth-child(3) {
+  border-radius: 41% 44% 56% 59% / 38% 62% 63% 37%;
+  animation: animate2 10s linear infinite;
 }
 
-.input input {
-    height: 50px;
-    width: 400px;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #797979;
-    font-size: 19px;  
+.ring:hover i {
+  border: 6px solid var(--clr);
+  filter: drop-shadow(0 0 20px var(--clr));
 }
 
-.forgot-password {
-    padding-left: 62px;
-    margin-top: 27px;
-    color: #1E3050;
-    font-size: 18px;
+@keyframes animate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-.forgot-password span {
-    color: #114155;
-    cursor: pointer;
+@keyframes animate2 {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
-.submit-container {
-    display: flex;
-    gap: 30px;
-    margin: 60px auto;
+.login {
+  position: absolute;
+  width: 300px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* Consistent Button Styling */
-.submit, .toggle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 220px;
-    height: 59px;
-    color: #fff; /* Text color */
-    background: #114155; /* Background color */
-    border-radius: 50px;
-    font-size: 19px;
-    font-weight: 700;
-    cursor: pointer;
+.login h2 {
+  font-size: 2em;
+  color: #fff;
 }
 
-.submit.gray, .toggle.gray {
-    background: #eaeaea;
-    color: #676767;
+.inputBx {
+  position: relative;
+  width: 100%;
 }
 
-.submit.gray:hover, .toggle.gray:hover {
-    background: #d0d0d0; /* Optional: Light gray for hover effect */
+.inputBx input {
+  position: relative;
+  width: 100%;
+  padding: 12px 20px;
+  background: transparent;
+  border: 2px solid #fff;
+  border-radius: 40px;
+  font-size: 1.2em;
+  color: #fff;
+  box-shadow: none;
+  outline: none;
 }
 
-.submit:hover, .toggle:hover {
-    background: #0d3f54; /* Darker shade for hover effect */
+.inputBx input[type="submit"] {
+  width: 100%;
+  background: linear-gradient(45deg, #ff357a, #fff172);
+  border: none;
+  cursor: pointer;
 }
 
-input::placeholder {
-    color: #1E3050;
-    opacity: 1; 
+.inputBx input::placeholder {
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .terms-container {
-    display: flex;
-    align-items: center;
-    margin-top: 20px; /* Space above the checkbox */
-    margin-left: auto; /* Align with the input fields */
-    margin-right: auto; /* Align with the input fields */
-    width: 480px; /* Match the width of the input fields */
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
 }
 
 .terms-checkbox {
-    margin-right: 10px; /* Space between checkbox and label */
+  margin-right: 10px;
 }
 
 .terms-label {
-    color: #e5ebee; /* Text color for the label */
-    cursor: pointer; /* Cursor change on hover */
+  color: #e5ebee;
+  cursor: pointer;
 }
 
 .terms-label a {
-    color: #eff3f5; /* Link color */
-    text-decoration: underline; /* Underline for links */
+  color: #e5ebee;
+  text-decoration: underline;
 }
 
-.terms-label a:hover {
-    color: #0d3f54; /* Darker shade on hover */
+.links {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.links a {
+  color: #fff;
+  text-decoration: none;
 }

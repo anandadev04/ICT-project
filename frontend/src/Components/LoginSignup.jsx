@@ -91,63 +91,65 @@ const LoginSignup = () => {
   };
 
   return (
-    <div className="container">
-      <div className="login-header">
-        <div className="text">{action}</div>
-        <div className="underline"></div>
-      </div>
-      <div className="inputs">
-        {action === 'Sign up' && (
-          <div className="input">
-            <img src={user_icon} className="icon" alt="" />
-            <input type="text" name="userName" placeholder="Name" onChange={valueFetch} value={form.userName} />
+    <div className="login-page">
+      <div className="ring">
+        <i style={{ "--clr": "#00ff0a" }}></i>
+        <i style={{ "--clr": "#ff0057" }}></i>
+        <i style={{ "--clr": "#fffd44" }}></i>
+        <div className="login">
+          <h2>{action}</h2>
+          {action === 'Sign up' && (
+            <div className="inputBx">
+              <input type="text" name="userName" placeholder="Name" onChange={valueFetch} value={form.userName} />
+            </div>
+          )}
+          <div className="inputBx">
+            <input type="email" name="email" placeholder="Email Id" onChange={valueFetch} value={form.email} />
           </div>
-        )}
-        <div className="input">
-          <img src={email_icon} className="icon" alt="" />
-          <input type="email" name="email" placeholder="Email Id" onChange={valueFetch} value={form.email} />
-        </div>
-        {action === 'Sign up' && (
-          <div className="input">
-            <img src={contact_icon} className="icon" alt="" />
-            <input type="text" name="phoneNumber" placeholder="Contact Number" onChange={valueFetch} value={form.phoneNumber} />
+          {action === 'Sign up' && (
+            <div className="inputBx">
+              <input type="text" name="phoneNumber" placeholder="Contact Number" onChange={valueFetch} value={form.phoneNumber} />
+            </div>
+          )}
+          {action === 'Sign up' && (
+            <div className="inputBx">
+              <input type="text" name="address" placeholder="Address" onChange={valueFetch} value={form.address} />
+            </div>
+          )}
+          <div className="inputBx">
+            <input type="password" name="password" placeholder="Password" onChange={valueFetch} value={form.password} />
           </div>
-        )}
-        {action === 'Sign up' && (
-          <div className="input">
-            <img src={house_icon} className="icon" alt="" />
-            <input type="text" name="address" placeholder="Address" onChange={valueFetch} value={form.address} />
+          {action === 'Sign up' && (
+            <div className="terms-container">
+              <input
+                type="checkbox"
+                className="terms-checkbox"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+              />
+              <label className="terms-label" onClick={() => setTermsAccepted(!termsAccepted)}>
+                I accept the <a href="/terms-and-conditions">Terms and Conditions</a>
+              </label>
+            </div>
+          )}
+          <div className="inputBx">
+            <input
+              type="submit"
+              value={action === 'Login' ? 'Sign In' : 'Sign Up'}
+              onClick={handleAction}
+              disabled={action === 'Sign up' && !termsAccepted}
+            />
           </div>
-        )}
-        <div className="input">
-          <img src={password_icon} className="icon" alt="" />
-          <input type="password" name="password" placeholder="Password" onChange={valueFetch} value={form.password} />
+          <div className="links">
+            {action === 'Sign up' && (
+              <a href="#" onClick={() => setAction('Login')}>Login</a>
+            )}
+            {action === 'Login' && (
+              <a href="#" onClick={() => setAction('Sign up')}>Sign Up</a>
+            )}
+            <a href="#">Forget Password</a>
+          </div>
         </div>
-      </div>
-      {action === 'Sign up' && (
-        <div className="terms-container">
-          <input
-            type="checkbox"
-            className="terms-checkbox"
-            checked={termsAccepted}
-            onChange={(e) => setTermsAccepted(e.target.checked)}
-          />
-          <label className="terms-label" onClick={() => setTermsAccepted(!termsAccepted)}>
-            I accept the <a href="/terms-and-conditions">Terms and Conditions</a>
-          </label>
-        </div>
-      )}
-      <div className="submit-container">
-        <div className="submit" onClick={handleAction} disabled={action === 'Sign up' && !termsAccepted}>
-          {action === 'Login' ? 'Sign In' : 'Sign Up'}
-        </div>
-        {/* Toggle Buttons */}
-        {action === 'Sign up' && (
-          <div className="toggle" onClick={() => setAction('Login')}>Login</div>
-        )}
-        {action === 'Login' && (
-          <div className="toggle" onClick={() => setAction('Sign up')}>Sign Up</div>
-        )}
       </div>
     </div>
   );
