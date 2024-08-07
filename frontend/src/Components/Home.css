@@ -2,8 +2,10 @@
 
 .home-container {
   padding: 20px;
-  background-color: rgba(45,47, 45, .667);
-  
+  /* background-color: rgba(45,47, 45, .667); */
+  /* background-image: linear-gradient(to right, #d7d2cc 0%, #304352 100%); */
+  background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898;
+ background-blend-mode: multiply,multiply;
 }
 
 .banner-container {
@@ -92,7 +94,7 @@
 
 .card:hover {
   transform: scale(1.5); /* Zoom effect on hover */
-  box-shadow: 0 12px 24px rgba(134, 131, 131, 0.5); /* Deep shadow on hover */
+  box-shadow: 0 12px 24px rgb(239, 237, 237); /* Deep shadow on hover */
 }
 
 @keyframes cardAnimation {

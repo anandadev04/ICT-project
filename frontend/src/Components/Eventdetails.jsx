@@ -47,7 +47,6 @@ const Eventdetails = () => {
               <p><strong>Timings:</strong> {event.timings}</p>
               <p><strong>Days:</strong> {event.days}</p>
               <p><strong>Venue:</strong> {event.venue}</p>
-              <p><strong>Likes:</strong> {event.likes}</p>
             </div>
           </div>
         </div>
