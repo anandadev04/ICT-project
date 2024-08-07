@@ -49,8 +49,9 @@ const Eventlist = () => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState([]);
-  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
+  const [likeCounts, setLikeCounts] = useState({}); // State for like counts
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -66,6 +67,10 @@ const Eventlist = () => {
         setLiked(initialLiked);
         setNewComment('');
         setComments(Array(response.data.length).fill([]));
+
+        // Fetch like counts
+        const likeCountsResponse = await axios.get('http://localhost:4000/api/likeCounts');
+        setLikeCounts(likeCountsResponse.data);
       } catch (error) {
         console.error('Error fetching events:', error);
       }
@@ -91,9 +96,19 @@ const Eventlist = () => {
       if (newLiked[index]) {
         // User is liking the event
         await axios.post('http://localhost:4000/api/like', likeData);
+        // Update like counts
+        setLikeCounts(prev => ({
+          ...prev,
+          [events[index].eventName]: (prev[events[index].eventName] || 0) + 1,
+        }));
       } else {
         // User is unliking the event
         await axios.post('http://localhost:4000/api/unlike', likeData);
+        // Update like counts
+        setLikeCounts(prev => ({
+          ...prev,
+          [events[index].eventName]: (prev[events[index].eventName] || 0) - 1,
+        }));
       }
     } catch (error) {
       console.error('Error handling like:', error);
@@ -184,6 +199,10 @@ const Eventlist = () => {
               <div className="icon-buttons">
                 <IconButton onClick={(event) => handleLike(index, event)} sx={{ color: 'white' }}>
                   {liked[index] ? <FavoriteIcon sx={{ color: 'red' }} /> : <FavoriteBorderIcon />}
+                  {/* Display like counts next to the icon with adjusted size */}
+                  <span style={{ marginLeft: '8px', color: 'white', fontSize: '0.875rem' }}>
+                    {likeCounts[event.eventName] || 0}
+                  </span>
                 </IconButton>
                 <IconButton onClick={(event) => handleOpenDialog(index, event)}>
                   <CommentIcon sx={{ color: 'white' }} />
@@ -248,44 +267,38 @@ const Eventlist = () => {
         <DialogContent>
           <div className="comment-input-container">
             <TextField
-              autoFocus
-              margin="dense"
-              id="comment"
-              label="Type your comment"
-              type="text"
-              fullWidth
+              label="New Comment"
               variant="outlined"
               value={newComment}
               onChange={(e) => handleCommentChange(e.target.value)}
-              InputProps={{
-                style: { color: '#e0e0e0' },
-              }}
-              InputLabelProps={{
-                style: { color: '#81bde8' },
-              }}
-              className="comment-textfield"
+              fullWidth
+              sx={{ mb: 2, backgroundColor: '#fff' }} // add a white background for better visibility
             />
-            <IconButton
-              color="primary"
+            <Button
+              variant="contained"
+              endIcon={<SendIcon />}
               onClick={handleAddComment}
-              className="send-button"
+              sx={{ backgroundColor: '#81bde8', color: 'white' }}
             >
-              <SendIcon />
-            </IconButton>
+              Add Comment
+            </Button>
           </div>
-          <div className="comments-list">
+          <div className="comment-list">
             {comments.map((comment, index) => (
-              <div key={index} className="comment">
-                <Typography variant="subtitle1" sx={{ color: '#81bde8' }}>{comment.userName}</Typography>
-                <Typography variant="body2">{comment.comments}</Typography>
-              </div>
+              <Typography key={index} variant="body2">
+                <strong>{comment.userName}:</strong> {comment.comments}
+              </Typography>
             ))}
           </div>
         </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} sx={{ color: 'white' }}>
+            Close
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );
 };
 
 export default Eventlist;
-

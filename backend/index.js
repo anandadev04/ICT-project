@@ -30,8 +30,6 @@ app.get('/check-email', async (req, res) => {
     }
 });
 
-
-// Signup
 // Signup
 app.post('/newuser', async (req, res) => {
     try {
@@ -50,7 +48,7 @@ app.post('/newuser', async (req, res) => {
 
         // Create a new user
         const newUser = new userModel({
-            userName, // Ensure userName is set correctly
+            userName,
             email,
             phoneNumber,
             address,
@@ -76,10 +74,9 @@ app.post('/login', async (req, res) => {
         if (user.password !== password) {
             return res.status(401).send('Invalid credentials');
         }
-        // Include the user's username in the response
         res.status(200).json({
             message: 'Login successful',
-            userName: user.userName,  // Add this line to include username
+            userName: user.userName,
             isAdmin: user.userName.toLowerCase() === 'admin'
         });
     } catch (error) {
@@ -88,20 +85,17 @@ app.post('/login', async (req, res) => {
     }
 });
 
-
 // Profile Fetch with Registered Events Count
 app.get('/user/:email', async (req, res) => {
     try {
         const email = req.params.email;
 
-        // Find user by email
         const user = await userModel.findOne({ email });
 
         if (!user) {
             return res.status(404).send(null);
         }
 
-        // Count registered events for the user
         const registeredCount = await RegisterData.countDocuments({ email });
 
         // Update the user's registered count if it's different
@@ -110,7 +104,6 @@ app.get('/user/:email', async (req, res) => {
             await user.save(); // Save the updated user data
         }
 
-        // Send the user data with the registered count
         res.status(200).json({ ...user.toObject(), registered: registeredCount });
     } catch (error) {
         console.error('Error fetching user:', error);
@@ -142,16 +135,6 @@ app.put('/user/:email', async (req, res) => {
     }
 });
 
-app.get('/api/events', async (req, res) => {
-    try {
-      const events = await EventData.find();
-      res.json(events);
-    } catch (error) {
-      console.error('Error fetching events:', error);
-      res.status(500).send('Internal Server Error');
-    }
-  });
-
 // Get all events
 app.get('/api/events', async (req, res) => {
     try {
@@ -166,16 +149,16 @@ app.get('/api/events', async (req, res) => {
 // Get event by ID
 app.get('/api/events/:eventId', async (req, res) => {
     try {
-      const event = await EventData.findById(req.params.eventId);
-      if (!event) {
-        return res.status(404).send('Event not found');
-      }
-      res.json(event);
+        const event = await EventData.findById(req.params.eventId);
+        if (!event) {
+            return res.status(404).send('Event not found');
+        }
+        res.json(event);
     } catch (error) {
-      console.error('Error fetching event:', error);
-      res.status(500).send('Internal Server Error');
+        console.error('Error fetching event:', error);
+        res.status(500).send('Internal Server Error');
     }
-  });
+});
 
 // Registration Endpoint
 app.post('/api/register', async (req, res) => {
@@ -195,7 +178,6 @@ app.post('/api/register', async (req, res) => {
         res.status(500).send('Error registering for event');
     }
 });
-  
 
 // New endpoint to get the number of registered events for a user
 app.get('/api/user-registrations/:email', async (req, res) => {
@@ -209,7 +191,7 @@ app.get('/api/user-registrations/:email', async (req, res) => {
     }
 });
 
-//comments
+// Comments
 app.post('/api/comments', async (req, res) => {
     try {
         const { eventName, userName, comments } = req.body;
@@ -242,49 +224,65 @@ app.get('/api/comments', async (req, res) => {
 // Fetch likes for a specific user
 app.get('/api/likes', async (req, res) => {
     try {
-      const { email } = req.query;
-      const likes = await LikeDetails.find({ email });
-      res.json(likes);
+        const { email } = req.query;
+        const likes = await LikeDetails.find({ email });
+        res.json(likes);
     } catch (error) {
-      console.error('Error fetching likes:', error);
-      res.status(500).send('Internal Server Error');
+        console.error('Error fetching likes:', error);
+        res.status(500).send('Internal Server Error');
     }
-  });
-  
-  // Endpoint to like an event
-  app.post('/api/like', async (req, res) => {
-    try {
-      const like = new LikeDetails(req.body);
-      await like.save();
-      res.status(201).send('Like saved successfully');
-    } catch (error) {
-      console.error('Error saving like:', error);
-      res.status(500).send('Internal Server Error');
-    }
-  });
+});
 
-// Assuming you have an express app setup
+// Endpoint to like an event
+app.post('/api/like', async (req, res) => {
+    try {
+        const like = new LikeDetails(req.body);
+        await like.save();
+        res.status(201).send('Like saved successfully');
+    } catch (error) {
+        console.error('Error saving like:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Endpoint to unlike an event
 app.post('/api/unlike', async (req, res) => {
     const { email, eventName } = req.body;
     try {
-      await LikeDetails.findOneAndDelete({ email, eventName });
-      res.status(200).json({ message: 'Event unliked successfully' });
+        await LikeDetails.findOneAndDelete({ email, eventName });
+        res.status(200).json({ message: 'Event unliked successfully' });
     } catch (error) {
-      res.status(500).json({ error: 'Error unliking event' });
+        res.status(500).json({ error: 'Error unliking event' });
     }
-  });
-  
-
-app.get('/api/likedEvents', async (req, res) => {
-const { email } = req.query;
-try {
-    const likedEvents = await LikeDetails.find({ email });
-    res.status(200).json(likedEvents);
-} catch (error) {
-    res.status(500).json({ error: 'Error fetching liked events' });
-}
 });
-  
+
+// Get liked events by user email
+app.get('/api/likedEvents', async (req, res) => {
+    const { email } = req.query;
+    try {
+        const likedEvents = await LikeDetails.find({ email });
+        res.status(200).json(likedEvents);
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching liked events' });
+    }
+});
+
+// Get like counts for each event
+app.get('/api/likeCounts', async (req, res) => {
+    try {
+        const likeCounts = await LikeDetails.aggregate([
+            { $group: { _id: "$eventName", count: { $sum: 1 } } }
+        ]);
+        const counts = {};
+        likeCounts.forEach(item => {
+            counts[item._id] = item.count;
+        });
+        res.json(counts);
+    } catch (error) {
+        console.error('Error fetching like counts:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 app.listen(PORT, () => {
     console.log("Server is running on PORT 4000");
