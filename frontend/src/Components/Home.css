@@ -1,17 +1,29 @@
+/* Home.css */
+
 .home-container {
   padding: 20px;
-  background-color: #f0f0f0;
+  background-color: rgba(45, 47, 45, 0.667);
+}
+
+.navbar-container {
+  margin-bottom: 20px;
 }
 
 .banner-container {
+  margin-top: 150px;
   position: relative;
   text-align: center;
   margin-bottom: 40px;
+  height: 400px; /* Set the height of the banner container */
+  overflow: hidden; /* Ensure overflow content is hidden */
 }
 
 .banner-image {
+  background-image: url('/src/assets/wall3.jpg');
+  background-size: cover;
+  background-position: bottom;
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
 }
 
@@ -20,14 +32,36 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  max-width: 200px;
+  width: 100px;
+  height: auto;
 }
 
 .heading {
   text-align: center;
-  font-size: 2.5em;
+  font-size: 2.5rem;
   margin-bottom: 20px;
-  color: #333;
+  color: #eeadad
+}
+
+.about-us-container {
+  padding-left: 18%;
+  padding-right: 18%;
+  margin-bottom: 100px;
+}
+
+.about-us-text {
+  color: #f8f0f0;
+  text-align: center;
+  line-height: 1.6;
+  font-size: 1.1em;
+  margin-bottom: 20px;
+}
+
+.about-us-title {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align:center;
 }
 
 .cards-container {
@@ -37,32 +71,93 @@
   gap: 20px;
 }
 
-.cards-container .MuiCard-root {
-  max-width: 320px;
+
+.cards-container {
+  margin-top: 5%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+}
+.card {
+  position: relative;
+  width: 320px;
+  height: 310px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background-color: #333;
   color: white;
+  margin-bottom: 20px;
+  transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out; /* Smooth transition for hover */
+  animation: cardAnimation 0.8s ease-in-out forwards; /* Initial animation */
 }
 
-.cards-container .MuiCard-root:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.card:hover {
+  transform: scale(1.5); /* Zoom effect on hover */
+  box-shadow: 0 12px 24px rgba(134, 131, 131, 0.5); /* Deep shadow on hover */
 }
 
-.cards-container .MuiCardMedia-root {
-  height: 250px;
+@keyframes cardAnimation {
+  0% {
+    transform: scale(0.95); /* Slightly smaller at the start */
+    opacity: 0; /* Initially invisible */
+  }
+  100% {
+    transform: scale(1); /* Normal size */
+    opacity: 1; /* Fully visible */
+  }
 }
 
-.cards-container .MuiTypography-h5 {
-  font-size: 1.5em;
+.card-media {
+  flex: 1;
+  width: 100%;
+  height: 310px; /* Fixed height for the image */
+}
+
+.card-content {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+  color: white;
+  padding: 10px;
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.card-title {
+  font-size: 1.5rem;
   margin-bottom: 10px;
 }
 
-.cards-container .MuiTypography-body2 {
-  font-size: 1em;
+.card-date,
+.card-description {
+  font-size: 1rem;
 }
 
-@media (max-width: 768px) {
-  .cards-container {
-    flex-direction: column;
-    align-items: center;
-  }
+.section-container {
+  width: 100%;
+  max-width: 1200px; /* Adjust to match the card container's max-width */
+  margin: 0 auto; /* Center the section */
+  padding: 0 20px; /* Padding for responsiveness */
+}
+
+.divider {
+  border-top: 2px solid #c8c2c2; /* Color and thickness of the line */
+  margin: 5px 0; /* Spacing around the line */
+  width: 100%; /* Full width to ensure it's aligned with the content */
+  max-width: 1350px; /* Optional: Limit the maximum width of the line */
+  margin-left: 4%; /* Remove default margin on the left */
+  margin-right: auto; /* Center-align the line within its container */
+}
+
+.upcoming-events-heading {
+  text-align: left; /* Align text to the left */
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: #c1b6b6; /* Color to match the heading style */
+  width: 100%; /* Full width to ensure alignment */
+  max-width: 1200px; /* Optional: Limit the maximum width of the heading */
+  margin-left: 5%; /* Remove default margin on the left */
+  margin-right: auto; /* Center-align the heading within its container */
 }

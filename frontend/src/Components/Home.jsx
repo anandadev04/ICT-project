@@ -3,23 +3,10 @@ import axios from 'axios';
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import CardActionArea from '@mui/material/CardActionArea';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import Navbar from './Navbar';
-
-const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
-  position: 'relative',
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  }
-}));
 
 const Home = () => {
   const navigate = useNavigate();
@@ -51,9 +38,9 @@ const Home = () => {
   };
 
   return (
-    <div>
+    <div className="home-container">
       <Navbar />
-      <div className="home-container">
+      <div className="navbar-container">
         <div className="banner-container">
           <img 
             src="/src/assets/wall3.jpg" 
@@ -61,48 +48,50 @@ const Home = () => {
             className="banner-image" 
           />
           <img 
-            src="/src/assets/logo.png" 
+            src="/src/assets/logo1.png" 
             alt="Overlay" 
             className="overlay-image" 
           />
         </div>
         
         <h1 className="heading">About Us</h1>
-        <div style={{ paddingLeft: "18%", paddingRight: "18%" }}>
-          <p style={{ color: 'black', textAlign: 'center' }}>
-            Welcome to [Your Company Name] – your go-to destination for discovering and registering for the latest and most exciting events!
-            We are dedicated to bringing you a diverse range of events that cater to every interest and occasion, ensuring you never miss out on an opportunity to connect, celebrate, and experience something new.
-            Our platform offers a seamless way to explore upcoming events, from community gatherings and professional workshops to concerts and social mixers. Here’s what we offer:
-            EventListings: Browse through a comprehensive list of upcoming events tailored to your interests. Each event page provides detailed information, including dates, locations, schedules, and more.
-            Event Details: Get all the essential information you need to make informed decisions about the events you want to attend.
-            Easy Registration: Secure your spot with our user-friendly registration process. Sign up and pay for tickets directly through our platform for a hassle-free experience.
-            At [Your Company Name], we are passionate about helping you stay engaged and make the most out of every event. Whether you’re looking to attend a local festival, a professional seminar, or an exclusive networking event, we’ve got you covered.
-
-            Explore our event calendar today and be part of the exciting experiences waiting for you!
+        <div className="about-us-container">
+          <p className="about-us-text">
+            Welcome to Gala, your one-stop destination for discovering, registering, and engaging with Galas that spark your interest and passion!
+          </p>
+          <p className="about-us-text">
+            Our vision is to create a vibrant community where people can connect through shared interests, discover new experiences, and participate in Galas that inspire and entertain. We believe that Galas bring people together, fostering collaboration, learning, and enjoyment. Gala aims to make it easy for everyone to be part of this exciting journey.
+          </p>
+          <p className="about-us-text">
+            Our mission is to enhance the Gala experience by providing a user-friendly platform that facilitates effortless Gala discovery, registration, and interaction. We strive to empower Gala organizers by giving them the tools they need to effectively promote their Galas, while also ensuring that attendees have all the information they need to make informed decisions about their participation.
           </p>
         </div>
+
+        <div className="divider"></div> {/* Line between sections */}
+        
+        <h2 className="upcoming-events-heading">Upcoming Events</h2> {/* New heading */}
         
         <div className="cards-container">
           {events.map((event) => (
-            <Card key={event._id} sx={{ maxWidth: 320, overflow: 'hidden', backgroundColor: '#333', color: 'white' }}>
+            <Card key={event._id} className="card">
               <CardActionArea onClick={() => handleCardClick(event._id)}>
-                <StyledCardMedia
+                <CardMedia
+                  className="card-media"
                   component="img"
-                  height="250"
                   image={`data:image/png;base64,${event.picture}`}
                   alt={event.eventName}
                 />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div" color="white">
+                <div className="card-content">
+                  <Typography gutterBottom variant="h5" component="div" className="card-title">
                     {event.eventName}
                   </Typography>
-                  <Typography variant="body2" color="white">
+                  <Typography variant="body2" className="card-date">
                     Start Date: {formatDate(event.startDate)}
                   </Typography>
-                  <Typography variant="body2" color="white">
+                  <Typography variant="body2" className="card-description">
                     {getFirstSentence(event.description)}
                   </Typography>
-                </CardContent>
+                </div>
               </CardActionArea>
             </Card>
           ))}
