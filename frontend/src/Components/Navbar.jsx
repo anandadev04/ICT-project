@@ -14,7 +14,7 @@ const Navbar = () => {
         <Link to="/home">Home</Link>
         <Link to="/profile">Profile</Link>
         <Link to="/event">Events</Link>
-        <Link to="/">Log Out</Link>
+        <Link to="/login">Log Out</Link>
       </nav>
     </header>
   );

@@ -7,6 +7,7 @@ const EventData = require('./model/eventData');
 const RegisterData = require('./model/registerData');
 const CommentData = require('./model/commentData');
 const LikeDetails = require('./model/likeDetails');
+const emailRoutes = require('./model/emailRoutes');
 require('./connection');
 
 app.use(cors());
@@ -283,6 +284,195 @@ app.get('/api/likeCounts', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
+// Get all users (Admin only)
+app.get('/user', async (req, res) => {
+    try {
+        const users = await userModel.find({});
+        res.status(200).json(users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Get all events (Admin only)
+app.get('/events', async (req, res) => {
+    try {
+        const events = await eventModel.find({});
+        res.status(200).json(events);
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Get a user by email
+app.get('/user/:email', async (req, res) => {
+    try {
+        const user = await userModel.findOne({ email: req.params.email });
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+// Get a event by id
+app.get('/events/:id', async (req, res) => {
+    try {
+        const eventId = req.params.id;
+        console.log('Fetching event with ID:', eventId);
+
+        if (!eventId || eventId === 'undefined') {
+            return res.status(400).send('Invalid event ID');
+        }
+
+        // Check if the ID is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(eventId)) {
+            return res.status(400).send('Invalid event ID format');
+        }
+
+        const event = await eventModel.findById(eventId);
+        if (!event) {
+            return res.status(404).send('Event not found');
+        }
+
+        res.status(200).json(event);
+    } catch (error) {
+        console.error('Error fetching event:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+
+
+// Delete a user (Admin only)
+app.delete('/api/admin/user/:email', async (req, res) => {
+    try {
+        const { email } = req.params;
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        await userModel.deleteOne({ email });
+        res.status(200).send('User deleted successfully');
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Delete an event (Admin only)
+app.delete('/events/:id', async (req, res) => {
+    const { id } = req.params;
+
+    // Debugging line to verify the ID
+    console.log('Event ID for deletion:', id);
+
+    try {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).send('Invalid ID format');
+        }
+
+        const result = await eventModel.findByIdAndDelete(id);
+        if (!result) {
+            return res.status(404).send('Event not found');
+        }
+        res.status(200).send('Event deleted successfully');
+    } catch (error) {
+        console.error('Error deleting event:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+// Login
+app.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        if (user.password !== password) {
+            return res.status(401).send('Invalid credentials');
+        }
+        res.status(200).json({
+            message: 'Login successful',
+            isAdmin: user.userName.toLowerCase() === 'admin'
+        });
+    } catch (error) {
+        console.error('Error logging in:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+app.put('/user/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { userName, phoneNumber, address, profilePicture } = req.body;
+
+        const updatedData = { userName, phoneNumber, address };
+        if (profilePicture) {
+            updatedData.profilePicture = profilePicture;
+        }
+
+        const user = await userModel.findByIdAndUpdate(id, updatedData, { new: true });
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        console.log('User updated successfully:', updatedData);
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Update event by ID
+app.put('/events/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { eventName, description, startDate, endDate, timings, days, venue, picture } = req.body;
+        // Log incoming data
+        console.log('Incoming data:', req.body);
+        // Validate the presence of required fields
+        if (!eventName || !description || !startDate || !endDate || !timings || !days || !venue) {
+            return res.status(400).send('Required fields are missing');
+        }
+        // Prepare the update object
+        const updatedEvent = {
+            eventName,
+            description,
+            startDate,
+            endDate,
+            timings,
+            days,
+            venue
+        };
+        // Include optional picture field if provided
+        if (picture) {
+            updatedEvent.picture = picture;
+        }
+        // Find event by ID and update
+        const event = await eventModel.findByIdAndUpdate(id, updatedEvent, { new: true });
+        if (!event) {
+            return res.status(404).send('Event not found');
+        }
+        console.log('Event updated successfully:', updatedEvent);
+        res.status(200).json(event);
+    } catch (error) {
+        console.error('Error updating event:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+
 
 app.listen(PORT, () => {
     console.log("Server is running on PORT 4000");
