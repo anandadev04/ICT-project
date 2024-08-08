@@ -29,6 +29,9 @@ const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
 
 const StyledCard = styled(Card)(({ theme }) => ({
   maxWidth: 320,
+  display: 'flex',
+  flexDirection: 'column', 
+  height: 550,
   overflow: 'hidden',
   backgroundColor: '#333',
   transition: 'transform 0.3s ease-in-out',
@@ -40,7 +43,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
 const getFirstSentence = (text) => {
   const sentenceEnd = /[.!?]/;
   const firstSentence = text.split(sentenceEnd)[0].trim();
-  return firstSentence + (firstSentence ? '.' : ''); // Add period if there was text
+  return firstSentence + (firstSentence ? '.' : ''); 
 };
 
 const Eventlist = () => {
@@ -187,42 +190,41 @@ const Eventlist = () => {
               height="250"
               image={`data:image/png;base64,${event.picture}`}
               alt={event.eventName}
-              className="card-media"
+              className="cards-media"
             />
-            <CardContent className="card-content">
-              <Typography gutterBottom variant="h5" component="div" className="card-title">
+            <CardContent className="cards-content">
+              <Typography gutterBottom variant="h5" component="div" className="cards-title">
                 {event.eventName}
               </Typography>
-              <Typography variant="body2" className="card-description">
+              <Typography variant="body2" className="cards-description">
                 {getFirstSentence(event.description)}
               </Typography>
-              <div className="icon-buttons">
-                <IconButton onClick={(event) => handleLike(index, event)} sx={{ color: 'white' }}>
-                  {liked[index] ? <FavoriteIcon sx={{ color: 'red' }} /> : <FavoriteBorderIcon />}
-                  {/* Display like counts next to the icon with adjusted size */}
-                  <span style={{ marginLeft: '8px', color: 'white', fontSize: '0.875rem' }}>
-                    {likeCounts[event.eventName] || 0}
-                  </span>
-                </IconButton>
-                <IconButton onClick={(event) => handleOpenDialog(index, event)}>
-                  <CommentIcon sx={{ color: 'white' }} />
-                </IconButton>
-                <Button
-                  variant="outlined"
-                  sx={{
-                    borderColor: 'white',
-                    color: 'white',
-                    '&:hover': {
-                      borderColor: '#81bde8',
-                      backgroundColor: 'rgba(137, 182, 227, 0.4)',
-                    }
-                  }}
-                  onClick={(e) => handleRegisterClick(e, event.eventName)}
-                >
-                  Register
-                </Button>
-              </div>
             </CardContent>
+            <div className="icon-buttons">
+              <IconButton onClick={(event) => handleLike(index, event)} sx={{ color: 'white' }}>
+                {liked[index] ? <FavoriteIcon sx={{ color: 'red' }} /> : <FavoriteBorderIcon />}
+                <span style={{ marginLeft: '8px', color: 'white', fontSize: '0.875rem' }}>
+                  {likeCounts[event.eventName] || 0}
+                </span>
+              </IconButton>
+              <IconButton onClick={(event) => handleOpenDialog(index, event)}>
+                <CommentIcon sx={{ color: 'white' }} />
+              </IconButton>
+              <Button
+                variant="outlined"
+                sx={{
+                  borderColor: 'white',
+                  color: 'white',
+                  '&:hover': {
+                    borderColor: '#81bde8',
+                    backgroundColor: 'rgba(137, 182, 227, 0.4)',
+                  }
+                }}
+                onClick={(e) => handleRegisterClick(e, event.eventName)}
+              >
+                Register
+              </Button>
+            </div>
           </CardActionArea>
         </StyledCard>
       ))}
@@ -267,35 +269,44 @@ const Eventlist = () => {
         <DialogContent>
           <div className="comment-input-container">
             <TextField
-              label="New Comment"
               variant="outlined"
+              fullWidth
+              placeholder="Enter your comment"
               value={newComment}
               onChange={(e) => handleCommentChange(e.target.value)}
-              fullWidth
-              sx={{ mb: 2, backgroundColor: '#fff' }} // add a white background for better visibility
+              className="comment-textfield"
+              InputProps={{
+                style: { color: 'white', borderColor: 'white' }
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: 'white',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#81bde8',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#81bde8',
+                  },
+                },
+                '& .MuiInputBase-input': {
+                  color: 'white',
+                }
+              }}
             />
-            <Button
-              variant="contained"
-              endIcon={<SendIcon />}
-              onClick={handleAddComment}
-              sx={{ backgroundColor: '#81bde8', color: 'white' }}
-            >
-              Add Comment
-            </Button>
+            <IconButton onClick={handleAddComment} color="inherit">
+              <SendIcon className="send-button" />
+            </IconButton>
           </div>
-          <div className="comment-list">
+          <div className="comments-section">
             {comments.map((comment, index) => (
-              <Typography key={index} variant="body2">
-                <strong>{comment.userName}:</strong> {comment.comments}
-              </Typography>
+              <div key={index} className="comment">
+                <strong>{comment.userName}</strong>: {comment.comments}
+              </div>
             ))}
           </div>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} sx={{ color: 'white' }}>
-            Close
-          </Button>
-        </DialogActions>
       </Dialog>
     </div>
   );
