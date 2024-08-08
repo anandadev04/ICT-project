@@ -1,9 +1,10 @@
 .header {
-    position: fixed;
+    position: absolute;
     top: 5%;
     left: 0;
     width: 100%;
     padding: 20px 10%;
+    background: transparent;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -16,7 +17,6 @@
     color: #fff;
     font-weight: 700;
     text-decoration: none; /* Ensure no underline for the link */
-    text-shadow: 2px 2px 4px rgba(253, 255, 255, 0.7);
   }
   
   .logo-image {
@@ -29,7 +29,7 @@
     color: #faf3f3;
     font-weight: 500;
     margin-left: 40px; 
-    text-decoration: none; 
+    text-decoration: none; /* Ensure no underline for the links */
   }
   
   .navbar a::before {
